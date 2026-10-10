@@ -4,7 +4,7 @@
 // ========================================
 
 const urlParams = new URLSearchParams(window.location.search);
-const TIKTOK_USERNAME = urlParams.get("id") || urlParams.get("username") || "xpedroks4";
+const TIKTOK_USERNAME = urlParams.get("id") || urlParams.get("username") || "makiozinha9";
 // Mantém os mesmos seis presentes e golpes.
 const PRESENTES_DUELO = {
   5655: {

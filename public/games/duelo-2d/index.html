@@ -1,31 +1,40 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
 
 <head>
+
   <meta charset="UTF-8">
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
   <title>Duelo da Live</title>
 
   <!-- PWA & Mobile Fullscreen Meta Tags -->
+
   <link rel="manifest" href="manifest.json">
+
   <meta name="mobile-web-app-capable" content="yes">
+
   <meta name="apple-mobile-web-app-capable" content="yes">
+
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
   <meta name="theme-color" content="#000000">
 
   <link rel="stylesheet" href="style.css">
+
   <style>
-    /* ======================================
-       PAINEL DE COMANDOS — NOVO DESIGN
-    ====================================== */
+    /* Painel de presentes compacto para desktop e celular */
     .gifts-legend-container {
       position: absolute;
-      top: clamp(6px, 1.2vw, 10px);
-      left: clamp(6px, 1.2vw, 12px);
-      right: clamp(6px, 1.2vw, 12px);
+      top: 8px;
+      left: 10px;
+      right: 10px;
       display: flex;
       justify-content: space-between;
-      gap: clamp(6px, 1.5vw, 14px);
+      align-items: flex-start;
+      gap: 8px;
       z-index: 8;
       pointer-events: none;
     }
@@ -33,116 +42,72 @@
     .gifts-column {
       display: flex;
       flex-direction: column;
-      gap: clamp(4px, 1vw, 7px);
-      width: min(34%, 205px);
+      gap: 7px;
+      width: clamp(110px, 23%, 150px);
       min-width: 0;
     }
 
-    .gifts-column.left {
-      justify-content: flex-start;
-    }
-
-    .gifts-column.right {
-      justify-content: flex-end;
-    }
-
-    /* Card individual */
     .gift-item {
       display: flex;
-      flex-direction: row;
       align-items: center;
-      justify-content: flex-start;
-      width: 100%;
-      min-height: 40px;
-      padding: 5px 8px;
-      background: linear-gradient(160deg, rgba(15, 15, 30, 0.88) 0%, rgba(30, 20, 60, 0.82) 100%);
+      justify-content: space-between;
+      gap: 5px;
+      min-height: 34px;
+      padding: 4px 7px;
+      background: linear-gradient(160deg, rgba(15,15,30,.88), rgba(30,20,60,.82));
+      border: 1px solid rgba(255,210,70,.35);
       border-radius: 10px;
-      border: 1px solid rgba(255, 210, 70, 0.35);
       backdrop-filter: blur(8px);
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.07);
-      gap: 7px;
+      box-shadow: 0 3px 10px rgba(0,0,0,.7);
       box-sizing: border-box;
     }
 
     .gift-item img {
-      width: 27px;
-      height: 27px;
+      display: block;
+      width: 25px;
+      height: 25px;
       object-fit: contain;
-      filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.9));
       flex-shrink: 0;
+      filter: drop-shadow(0 2px 5px rgba(0,0,0,.8));
     }
 
-    /* Badge da ação */
-    .gift-action {
-      font-size: 11px;
-      font-weight: 900;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      padding: 2px 7px;
-      border-radius: 4px;
-      white-space: nowrap;
-      line-height: 1.4;
-      margin-left: auto;
-      flex-shrink: 0;
-    }
-
-    .gift-action.soco {
-      background: #c0392b;
-      color: #fff;
-      text-shadow: 0 1px 2px #000;
-    }
-
-    .gift-action.combo {
-      background: #d4841a;
-      color: #fff;
-      text-shadow: 0 1px 2px #000;
-    }
-
-    .gift-action.especial {
-      background: #6c3fa1;
-      color: #fff;
-      text-shadow: 0 1px 2px #000;
-    }
-
-    /* Linha de texto pequena — nome do item */
     .gift-label {
-      font-size: 11px;
-      font-weight: 700;
-      color: rgba(255, 255, 255, 0.9);
-      text-shadow: 0 1px 2px #000;
-      white-space: nowrap;
-      text-align: left;
-      line-height: 1;
-      overflow: hidden;
-      text-overflow: ellipsis;
       min-width: 0;
+      font-size: 10px;
+      font-weight: 800;
+      color: white;
+      white-space: nowrap;
+      text-shadow: 0 1px 2px #000;
     }
 
-    @media (max-width: 380px) {
-      .gifts-column {
-        width: 47%;
-      }
+    .gift-action {
+      display: inline-block;
+      flex-shrink: 0;
+      padding: 3px 6px;
+      border-radius: 5px;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 900;
+      line-height: 1.2;
+      white-space: nowrap;
+      text-transform: uppercase;
+      text-shadow: 0 1px 2px #000;
+    }
 
-      .gift-item {
-        padding-inline: 6px;
-        gap: 5px;
-      }
+    .gift-action.soco { background: #c0392b; }
+    .gift-action.combo { background: #d4841a; }
+    .gift-action.especial { background: #6c3fa1; }
 
-      .gift-item img {
-        width: 24px;
-        height: 24px;
-      }
-
-      .gift-label {
-        font-size: 10px;
-      }
-
-      .gift-action {
-        font-size: 10px;
-        padding-inline: 5px;
-      }
+    @media (max-width: 480px) {
+      .gifts-legend-container { top: 6px; left: 7px; right: 7px; gap: 6px; }
+      .gifts-column { width: 110px; max-width: 32%; gap: 6px; }
+      .gift-item { min-height: 31px; padding: 4px 5px; gap: 3px; }
+      .gift-item img { width: 21px; height: 21px; }
+      .gift-label { font-size: 9px; }
+      .gift-action { font-size: 9px; padding: 3px 4px; }
     }
   </style>
+
 </head>
 
 <body>
@@ -150,170 +115,192 @@
   <div id="game">
 
     <!-- TÍTULO E BARRAS DE VIDA -->
+
     <header class="hud">
+
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3.5%;">
+
         <h1 style="margin: 0; flex: 1;">Simulação</h1>
+
         <button id="btnFullscreen" title="Tela Cheia"
+
           style="background: rgba(255,255,255,0.15); border: 1px solid #ffd94d; color: #ffd94d; font-size: 14px; font-weight: bold; padding: 4px 8px; border-radius: 4px; cursor: pointer; z-index: 30;">⛶
+
           FULL</button>
+
       </div>
 
       <div class="health-bars">
 
         <div class="health-box">
+
           <div class="fighter-name">LULA</div>
 
           <div class="health-track">
+
             <div class="health-fill" id="hpLula"></div>
+
           </div>
 
           <span id="textLula">100 HP</span>
+
         </div>
 
         <div class="health-box right">
+
           <div class="fighter-name">FLÁVIO<br>BOLSONARO</div>
 
           <div class="health-track">
+
             <div class="health-fill" id="hpBolsonaro"></div>
+
           </div>
 
           <span id="textBolsonaro">100 HP</span>
+
         </div>
 
       </div>
 
       <div class="versus">VS</div>
+
     </header>
 
-
     <!-- ARENA -->
+
     <main class="arena">
 
       <!-- ================================================================= -->
+
       <!-- PAINEL DE COMANDOS DE PRESENTES (Comentar esta DIV para remover) -->
+
       <!-- ================================================================= -->
+
       <div class="gifts-legend-container">
-
-        <!-- LULA (esquerda) -->
+        <!-- LULA: apenas ícones e ações -->
         <div class="gifts-column left">
-
           <div class="gift-item">
-            <img src="icones/tiktok-heart.png" alt="Curtidas">
-            <span class="gift-label">100 curtidas</span>
-            <span class="gift-action soco">SOCO</span>
-          </div>
-
+  <img src="icones/tiktok-heart.png" alt="Curtidas">
+  <span class="gift-label">100likes</span>
+  <span class="gift-action soco">SOCO</span>
+</div>
           <div class="gift-item">
             <img src="icones/rose.webp" alt="Rose">
-            <span class="gift-label">Rose</span>
             <span class="gift-action soco">SOCO</span>
           </div>
-
           <div class="gift-item">
             <img src="icones/tiny-diny.webp" alt="Tiny Diny">
-            <span class="gift-label">Tiny Diny</span>
             <span class="gift-action combo">COMBO</span>
           </div>
-
           <div class="gift-item">
             <img src="icones/confetti.webp" alt="Confetti">
-            <span class="gift-label">Confetti</span>
             <span class="gift-action especial">ESPECIAL</span>
           </div>
-
         </div>
 
-        <!-- BOLSONARO (direita) -->
+        <!-- FLÁVIO: seguir e os presentes -->
         <div class="gifts-column right">
-
           <div class="gift-item">
-            <img src="icones/seguir.png" alt="Seguir/Share">
-            <span class="gift-label">Seguir/Share</span>
+            <img src="icones/seguir.png" alt="Seguir">
+            <span class="gift-label">Seguir</span>
             <span class="gift-action soco">SOCO</span>
           </div>
-
           <div class="gift-item">
             <img src="icones/gg.webp" alt="GG">
-            <span class="gift-label">GG</span>
             <span class="gift-action soco">SOCO</span>
           </div>
-
           <div class="gift-item">
             <img src="icones/heart.webp" alt="Heart">
-            <span class="gift-label">Heart</span>
             <span class="gift-action combo">COMBO</span>
           </div>
-
           <div class="gift-item">
-            <img src="icones/heart-my-earthling.webp" alt="Earthling">
-            <span class="gift-label">Earthling</span>
+            <img src="icones/heart-my-earthling.webp" alt="Heart My Earthling">
             <span class="gift-action especial">ESPECIAL</span>
           </div>
-
         </div>
       </div>
       <!-- ================================================================= -->
 
       <!-- CENÁRIO -->
+
       <div class="arena-background">
+
         <div class="sun"></div>
+
         <div class="building left-building"></div>
+
         <div class="building right-building"></div>
+
         <div class="arena-floor"></div>
+
       </div>
 
-
       <!-- LUTADOR: LULA -->
+
       <div class="fighter lula" id="lula">
 
         <img id="spriteLula" src="sprites/lula/parado-1.png" alt="Lula em pixel art">
 
         <div class="placeholder">
+
           <div class="head"></div>
+
           <div class="torso"></div>
+
           <div class="arm"></div>
+
           <div class="legs"></div>
+
         </div>
 
         <div class="fighter-shadow"></div>
 
       </div>
 
-
       <!-- LUTADOR: BOLSONARO -->
+
       <div class="fighter bolsonaro" id="bolsonaro">
 
         <img id="spriteBolsonaro" src="sprites/bolsonaro/parado-1.png" alt="Bolsonaro em pixel art">
 
         <div class="placeholder">
+
           <div class="head"></div>
+
           <div class="torso"></div>
+
           <div class="arm"></div>
+
           <div class="legs"></div>
+
         </div>
 
         <div class="fighter-shadow"></div>
 
       </div>
 
-
       <!-- EFEITOS DOS GOLPES -->
+
       <div id="impact" class="impact"></div>
 
       <!-- BOLA DE ENERGIA DO ESPECIAL -->
+
       <div id="energiaEspecial" class="energia-especial"></div>
 
-
       <!-- TELA DE K.O. -->
+
       <div id="koOverlay" class="ko-overlay hidden">
+
         <div class="ko-title">K.O.!</div>
+
         <div id="winnerText" class="winner-text"></div>
+
       </div>
 
     </main>
 
-
     <!-- PLACAR -->
+
     <section class="scoreboard">
 
       <h2>🏆 VITÓRIAS</h2>
@@ -321,18 +308,27 @@
       <div class="score-row">
 
         <div class="score lula-score">
+
           <span>LULA</span>
+
           <strong id="winsLula">0</strong>
+
         </div>
 
         <div class="round-box">
+
           <span>RODADA</span>
+
           <strong id="roundNumber">1</strong>
+
         </div>
 
         <div class="score bolsonaro-score">
+
           <span>FLÁVIO<br>BOLSONARO</span>
+
           <strong id="winsBolsonaro">0</strong>
+
         </div>
 
       </div>
@@ -341,43 +337,70 @@
 
   </div>
 
-
   <!-- SOCKET.IO: CONEXÃO COM O SERVIDOR -->
+
   <script src="/socket.io/socket.io.js"></script>
 
   <!-- MOTOR DO JOGO -->
+
   <script src="game.js"></script>
 
   <!-- INTEGRAÇÃO COM OS PRESENTES DO TIKTOK -->
+
   <script src="tiktok-duelo.js"></script>
 
   <!-- REGISTRO PWA SERVICE WORKER & FULLSCREEN -->
+
   <script>
+
     if ('serviceWorker' in navigator) {
+
       window.addEventListener('load', () => {
+
         navigator.serviceWorker.register('./sw.js').catch(() => { });
+
       });
+
     }
 
     const btnFull = document.getElementById('btnFullscreen');
+
     if (btnFull) {
+
       btnFull.addEventListener('click', () => {
+
         const docEl = document.documentElement;
+
         if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+
           if (docEl.requestFullscreen) {
+
             docEl.requestFullscreen();
+
           } else if (docEl.webkitRequestFullscreen) {
+
             docEl.webkitRequestFullscreen();
+
           }
+
         } else {
+
           if (document.exitFullscreen) {
+
             document.exitFullscreen();
+
           } else if (document.webkitExitFullscreen) {
+
             document.webkitExitFullscreen();
+
           }
+
         }
+
       });
+
     }
+
   </script>
 
 </body>

@@ -184,6 +184,7 @@ groupId:
 
 eventId:
     data.msgId ??
+    data.common?.msgId ??
     data.monitorExtra?.msg_id ??
     null
 };

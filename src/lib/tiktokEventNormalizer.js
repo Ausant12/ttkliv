@@ -18,6 +18,9 @@ export function normalizeUser(raw) {
     uniqueId:
       usuario.uniqueId ||
       raw.uniqueId ||
+      usuario.displayId ||
+      raw.displayId ||
+      String(usuario.userId || usuario.idStr || usuario.id || raw.userId || "") ||
       "",
 
     nickname:
@@ -37,13 +40,25 @@ export function normalizeUser(raw) {
  * @param {Object} raw - Raw chat event
  * @returns {{user: Object, comment: string, timestamp: number}}
  */
+
 export function normalizeChat(raw) {
-	return {
-		user: normalizeUser(raw),
-		comment: (raw.comment || "").toLowerCase().trim(),
-		timestamp: Date.now(),
-	};
+  const comentario =
+    raw.comment ??
+    raw.commentText ??
+    raw.content ??
+    raw.text ??
+    raw.message ??
+    raw.data?.comment ??
+    raw.data?.content ??
+    "";
+
+  return {
+    user: normalizeUser(raw),
+    comment: String(comentario).trim(),
+    timestamp: Date.now()
+  };
 }
+
 
 /**
  * Normalize like event.

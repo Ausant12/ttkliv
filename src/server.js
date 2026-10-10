@@ -159,8 +159,49 @@ io.on("connection", (socket) => {
   socket.on("ping", () => {
     socket.emit("pong", { timestamp: Date.now() });
   });
-});
 
+  // ========================================
+  // TESTE LOCAL DE CURTIDAS
+  // ========================================
+
+  socket.on("teste-curtidas", (quantidade) => {
+    const qtd = Number(quantidade);
+
+    if (!Number.isSafeInteger(qtd) || qtd < 1 || qtd > 1000) {
+      return;
+    }
+
+    if (process.env.NODE_ENV === "production") {
+      return;
+    }
+
+    const clienteLocal = socket.handshake.address;
+
+    if (
+      !["127.0.0.1", "::1", "::ffff:127.0.0.1"].includes(clienteLocal)
+    ) {
+      return;
+    }
+
+    const sala = socket.tiktokUsername;
+
+    if (!sala) {
+      console.log("[TESTE] Cliente não entrou em uma sala.");
+      return;
+    }
+
+    console.log(`[TESTE] ${qtd} curtidas simuladas na sala ${sala}`);
+
+    io.to(sala).emit("tiktok_like", {
+      likeCount: qtd
+    });
+  });
+
+}); // FECHA io.on("connection")
+
+// ==========================================
+// START SERVER
+// ==========================================
 // ==========================================
 // START SERVER
 // ==========================================

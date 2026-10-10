@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Batalha dos Blocos</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="game">
+  <!-- Vídeo de fundo; sem áudio, repetição automática -->
+  <video id="video-fundo" autoplay muted loop playsinline preload="auto" aria-hidden="true">
+    <source src="assets/fundo-live.mp4" type="video/mp4">
+  </video>
+  <button id="ativar-audio" type="button">🔊 ATIVAR SONS</button>
+  <header class="topbar">
+    <div class="score-box"><span>PLACAR</span><strong id="score-geral"><span id="score-lula">0</span> x <span id="score-flavio">0</span></strong></div>
+  </header>
+  <main class="arena">
+    <section class="lado lado-lula"><div class="conteudo-lado">
+      <div class="cabecalho-lado"><h2>LULA</h2><div class="torre-info" id="info-lula">TORRE: 0/200</div></div>
+      <div class="torre-area"><div class="torre-base"><div class="torre torre-lula" id="torre-lula"></div><div class="estrela-lula" id="estrela-lula"></div></div><div class="numero-grande lula-num" id="numero-lula">0</div></div>
+      <div class="presentes">
+        <div class="interacao"><img src="../duelo-2d/icones/tiktok-heart.png" alt="Curtidas"><small>200 curtidas</small><strong>+10</strong></div>
+        <div class="interacao"><span class="interacao-icone" aria-hidden="true">💬</span><small>Comente 13</small><strong>+1</strong></div>
+        <div class="presente"><img src="../duelo-2d/icones/rose.webp" alt="Rose"><span>+5</span></div>
+        <div class="presente"><img src="../duelo-2d/icones/tiny-diny.webp" alt="Tiny Diny"><span>+25</span></div>
+        <div class="presente"><img src="../duelo-2d/icones/heart-my-earthling.webp" alt="Heart My Earthling"><span>+100</span></div>
+        <div class="presente"><img src="../duelo-2d/icones/voceedemais.webp" alt="Você é Demais"><span>+600</span></div>
+        <div class="presente"><img src="../duelo-2d/icones/coroa.webp" alt="Coroa do Acelerador"><span>+1.200</span></div>
+      </div>
+    </div></section>
+    <section class="centro"><div class="vs">VS</div><div class="feed-eventos" id="feed-eventos"><div class="evento">Aguardando presentes...</div></div></section>
+    <section class="lado lado-flavio"><div class="conteudo-lado">
+      <div class="cabecalho-lado"><h2>FLÁVIO</h2><div class="torre-info" id="info-flavio">TORRE: 0/200</div></div>
+      <div class="torre-area"><div class="torre-base"><div class="torre torre-flavio" id="torre-flavio"></div></div><div class="numero-grande flavio-num" id="numero-flavio">0</div></div>
+      <div class="presentes">
+        <div class="interacao"><img src="../duelo-2d/icones/seguir.png" alt="Seguir"><small>Seguir</small><strong>+20</strong></div>
+        <div class="interacao"><span class="interacao-icone" aria-hidden="true">💬</span><small>Comente 22</small><strong>+1</strong></div>
+        <div class="presente"><img src="../duelo-2d/icones/gg.webp" alt="GG"><span>+5</span></div>
+        <div class="presente"><img src="../duelo-2d/icones/heart.webp" alt="Heart"><span>+25</span></div>
+        <div class="presente"><img src="../duelo-2d/icones/confetti.webp" alt="Confetti"><span>+100</span></div>
+        <div class="presente"><img src="../duelo-2d/icones/pistoladinheiro.webp" alt="Pistola de Dinheiro"><span>+600</span></div>
+        <div class="presente"><img src="../duelo-2d/icones/galaxia.webp" alt="Galáxia"><span>+1.200</span></div>
+      </div>
+    </div></section>
+  </main>
+  <div class="overlay-vitoria hidden" id="overlay-vitoria"><div class="card-vitoria"><h2 id="titulo-vitoria">VITÓRIA!</h2><p id="texto-vitoria">Fim da rodada</p></div></div>
+  <section class="painel-teste"><h3>Simular presentes — Lula / Flávio</h3><div class="botoes-teste">
+    <button onclick="receberPresenteTikTok(5655)">Rose +5</button><button onclick="receberPresenteTikTok(6064)">GG +5</button>
+    <button onclick="receberPresenteTikTok(6560)">Tiny Diny +25</button><button onclick="receberPresenteTikTok(5327)">Heart +25</button>
+    <button onclick="receberPresenteTikTok(544015)">Earthling +100</button><button onclick="receberPresenteTikTok(5585)">Confetti +100</button>
+    <button onclick="receberPresenteTikTok(&quot;You're Amazing&quot;)">Você é Demais +600</button><button onclick="receberPresenteTikTok('Money Gun')">Pistola +600</button>
+    <button onclick="receberPresenteTikTok('Accelerator Crown')">Coroa +1.200</button><button onclick="receberPresenteTikTok('Galaxy')">Galáxia +1.200</button>
+  </div></section>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="game.js"></script>
+</body>
+</html>

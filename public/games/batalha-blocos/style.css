@@ -1,0 +1,59 @@
+/* BATALHA DOS BLOCOS — vertical, com vídeo e faixas lisas */
+:root { --amarelo:#ffdc36; --vermelho:#ff4850; --verde:#35f379; }
+* { box-sizing:border-box; margin:0; padding:0; }
+html,body { width:100%; height:100%; overflow:hidden; }
+body { display:grid; place-items:center; background:#080808; color:white; font-family:Arial,Helvetica,sans-serif; }
+#game { position:relative; isolation:isolate; display:flex; flex-direction:column; width:min(100vw,56.25vh); height:min(100vh,177.7778vw); aspect-ratio:9/16; overflow:hidden; background:#141414 url('assets/fundo-batalha.png') center/cover no-repeat; }
+#video-fundo { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none; z-index:-1; }
+.topbar { position:relative; z-index:15; display:flex; flex:none; justify-content:center; padding:2px 6px; text-align:center; }
+.score-box { min-width:98px; padding:2px 12px; text-shadow:0 2px 5px #000; }
+.score-box > span { display:block; font-size:10px; color:#ddd; }
+.score-box strong { font-size:24px; }
+#score-lula { color:var(--vermelho); }
+#score-flavio { color:var(--verde); }
+.arena { flex:1; min-height:0; display:grid; grid-template-columns:minmax(0,1fr) 36px minmax(0,1fr); }
+.lado { min-width:0; position:relative; overflow:hidden; }
+.conteudo-lado { position:relative; height:100%; padding:2px 2px; }
+.cabecalho-lado { text-align:center; position:relative; z-index:5; }
+.cabecalho-lado h2 { font-size:23px; font-weight:900; text-shadow:0 2px 5px black; }
+.torre-info { display:table; margin:5px auto; padding:4px 6px; border-radius:15px; background:#000a; border:1px solid #ffffff24; font-size:10px; font-weight:bold; }
+.centro { position:relative; text-align:center; padding-top:2px; border-inline:1px solid #ffffff22; }
+.vs { font-size:22px; font-weight:900; color:var(--amarelo); text-shadow:0 2px 6px #000; }
+.feed-eventos { display:none; }
+.torre-area { position:absolute; top:37%; bottom:3%; left:0; right:0; display:flex; justify-content:center; align-items:flex-end; pointer-events:none; }
+.torre-base { position:relative; width:79%; max-width:132px; height:96%; overflow:hidden; background:none; border:0; box-shadow:none; }
+.torre { position:absolute; inset:0; }
+/* 20 faixas lisas, 10 pisos por faixa. */
+.faixa { position:absolute; left:0; height:5%; border-radius:0; border-top:1px solid #ffffff55; box-shadow:inset 0 2px #ffffff1c,0 -1px 2px #0007; transition:width 60ms linear; animation:faixa-cai .19s ease-out; }
+@keyframes faixa-cai { from { transform:translateY(-90px); opacity:.15; } to { transform:translateY(0); opacity:1; } }
+.torre-lula .faixa { background:#e51f31; }
+.torre-flavio .faixa.verde { background:#13c951; }
+.torre-flavio .faixa.amarelo { background:#ffd52d; }
+.estrela-lula { position:absolute; inset:0; background:url('assets/estrela.svg') center/80% auto no-repeat; clip-path:inset(100% 0 0 0); pointer-events:none; filter:drop-shadow(0 0 4px #ffce00); }
+.numero-grande { position:absolute; left:50%; bottom:8px; transform:translateX(-50%); z-index:6; font-size:43px; font-weight:900; line-height:1; text-shadow:0 2px 8px black; transition:bottom .1s linear; }
+.lula-num { color:var(--vermelho); }
+.flavio-num { color:var(--verde); }
+.lado .presentes { position:absolute; top:84px; z-index:12; width:54px; padding:5px 2px; display:flex; flex-direction:column; gap:4px; align-items:center; text-align:center; border-radius:10px; background:#0008; }
+.lado-lula .presentes { left:2px; }
+.lado-flavio .presentes { right:2px; }
+.presente { display:flex; align-items:center; flex-direction:column; gap:2px; }
+.presente img { width:30px; height:30px; object-fit:contain; }
+.presente span { font-size:11px; font-weight:900; text-shadow:0 2px 4px #000; }
+.interacao { display:flex; flex-direction:column; align-items:center; gap:1px; width:100%; padding-bottom:4px; border-bottom:1px solid #ffffff35; }
+.interacao img { width:18px; height:18px; object-fit:contain; }
+.interacao-icone { font-size:16px; line-height:18px; }
+.interacao small { font-size:8px; font-weight:bold; line-height:1.1; white-space:nowrap; }
+.interacao strong { color:var(--amarelo); font-size:10px; line-height:1.1; }
+.overlay-vitoria { position:absolute; inset:0; z-index:30; display:grid; place-items:center; padding:16px; background:#000b; }
+.overlay-vitoria.hidden { display:none; }
+.card-vitoria { width:92%; padding:28px 12px; text-align:center; background:linear-gradient(#242424,#101010); border:2px solid #ffde5488; border-radius:20px; box-shadow:0 0 36px #ffde5455; animation:aparecer .4s ease-out; }
+.card-vitoria h2 { color:var(--amarelo); font-size:36px; }
+.card-vitoria p { margin-top:8px; font-size:18px; }
+@keyframes aparecer { from { transform:scale(.6); opacity:0; } to { transform:scale(1); opacity:1; } }
+.painel-teste { display:none; }
+.modo-teste .painel-teste { display:block; position:absolute; left:5px; right:5px; bottom:48px; z-index:25; padding:8px; border-radius:8px; background:#111e; border:1px solid #ffe35c; }
+.painel-teste h3 { font-size:12px; margin-bottom:6px; color:var(--amarelo); }
+.botoes-teste { display:grid; grid-template-columns:1fr 1fr; gap:4px; }
+.botoes-teste button { cursor:pointer; padding:6px 3px; border:1px solid #ffffff55; border-radius:5px; color:white; background:#333; font-size:10px; }
+
+#ativar-audio { position:absolute; z-index:35; right:6px; bottom:7px; cursor:pointer; padding:8px 10px; border:1px solid #ffe35c; border-radius:8px; color:#fff; background:#151515ea; font-size:11px; font-weight:bold; }
