@@ -4,6 +4,25 @@ import fs from "node:fs";
 import vm from "node:vm";
 import { normalizeUser } from "../src/lib/tiktokEventNormalizer.js";
 
+test("conexão aceita username, usuario e id e entra na sala correta", () => {
+  const source = fs.readFileSync(new URL("../public/games/batalha-blocos/game.js", import.meta.url), "utf8");
+  const connectionSource = source.slice(source.indexOf("function conectarLive()"), source.indexOf("// Testes locais"));
+  for (const search of ["?username=anny.fofinha4", "?usuario=anny.fofinha4", "?id=anny.fofinha4", "?usuario=&username=%40Anny.Fofinha4"]) {
+    const handlers = {};
+    const emitted = [];
+    const socket = { on(event, handler) { handlers[event] = handler; }, emit(...args) { emitted.push(args); } };
+    const context = vm.createContext({
+      location: { search }, URLSearchParams, console,
+      window: { io: () => socket },
+      registrarSeguidor() {}, registrarCurtidas() {}, registrarComentario() {}, registrarPresenteReal() {},
+    });
+    vm.runInContext(connectionSource + "\nconectarLive();", context);
+    assert.equal(typeof handlers.connect, "function");
+    handlers.connect();
+    assert.deepEqual(emitted, [["join-room", "anny.fofinha4"]]);
+  }
+});
+
 function jogo() {
   const source = fs.readFileSync(new URL("../public/games/batalha-blocos/game.js", import.meta.url), "utf8");
   const config = source.slice(source.indexOf("const META ="), source.indexOf("const state ="));

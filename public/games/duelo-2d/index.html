@@ -245,8 +245,8 @@
 
       <!-- CENÁRIO -->
 
-      <video class="arena-background" autoplay muted loop playsinline preload="auto" aria-hidden="true">
-        <source src="../batalha-blocos/assets/fundo-live.mp4" type="video/mp4">
+      <video id="arenaVideo" class="arena-background" autoplay muted loop playsinline preload="auto" aria-hidden="true">
+        <source src="ufc.mp4" type="video/mp4">
       </video>
 
       <!-- LUTADOR: LULA -->
@@ -356,6 +356,8 @@
   <script src="/socket.io/socket.io.js"></script>
 
   <!-- MOTOR DO JOGO -->
+
+  <script src="background-video.js"></script>
 
   <script src="game.js"></script>
 

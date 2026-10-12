@@ -312,9 +312,12 @@ function registrarPresenteReal(payload) {
 
 // Iniciar com ?usuario=nome_da_conta na URL.
 function conectarLive() {
-  const usuario = new URLSearchParams(location.search).get("usuario")?.trim().replace(/^@/, "");
+  const params = new URLSearchParams(location.search);
+  const usuario = ["usuario", "username", "id"]
+    .map(param => params.get(param)?.trim().replace(/^@/, "").toLowerCase())
+    .find(Boolean);
   if (!usuario) {
-    console.info("[BLOCOS] Para conectar à LIVE, abra a URL com ?usuario=seu_perfil");
+    console.info("[BLOCOS] Para conectar à LIVE, abra a URL com ?username=seu_perfil (também aceita usuario ou id)");
     return;
   }
   if (typeof window.io !== "function") {
