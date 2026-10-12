@@ -11,8 +11,8 @@ let janela;
 
 function criarJanela() {
     janela = new BrowserWindow({
-        width: 540,
-        height: 960,
+        width: 1100,
+        height: 1000,
 
         minWidth: 360,
         minHeight: 640,
@@ -34,11 +34,10 @@ function criarJanela() {
     // Abre o nosso jogo (permite passar URL via argumento se desejado, ex: npx electron electron.cjs http://localhost:3000/games/duelo-2d-kim-nik/)
     const targetUrl = process.argv[2] && process.argv[2].startsWith("http")
         ? process.argv[2]
-        : "http://localhost:3000/games/batalha-blocos/?usuario=ougusto9";
+        : "http://localhost:3000/games/batalha-videos/";
 
     janela.loadURL(targetUrl);
 
-    janela.webContents.openDevTools();
 
     // F5 e Ctrl + R recarregam o jogo
     janela.webContents.on(

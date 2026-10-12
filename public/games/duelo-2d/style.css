@@ -633,10 +633,16 @@ body {
 }
 
 
-/* fundo antigo em HTML não será usado */
+/* Vídeo animado atrás dos lutadores e da interface. */
 .arena-background {
-    display:
-        none;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 35%;
+    pointer-events: none;
+    z-index: 0;
 }
 
 

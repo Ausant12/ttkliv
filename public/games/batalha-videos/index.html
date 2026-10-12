@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Batalha de vídeos</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<main class="workspace">
+  <section class="preview"><div class="preview-title">TELA DA LIVE <span>9:16 · 1080 × 1920</span></div>
+    <div id="arena" class="arena" aria-label="Batalha de vídeos">
+      <section class="fighter" data-side="0"><div class="placeholder"><small>Adicione vídeos à sequência no painel</small></div><video class="loop" muted playsinline hidden></video><video class="action" muted playsinline hidden></video></section>
+    </div>
+  </section>
+  <aside class="panel">
+    <header><p class="eyebrow">ESTÚDIO DE BATALHA</p><h1>Batalha de vídeos</h1><p>Seus vídeos em sequência. Você escolhe a próxima ação.</p></header>
+    <div class="toolbar"><button id="open-overlay">Abrir tela da live ↗</button><button id="resume">Voltar à sequência</button></div>
+    <p class="hint">Capture a janela “Tela da live” no TikTok Studio. Os botões ficam apenas neste painel. Os arquivos são salvos neste navegador.</p>
+    <div id="controls"></div>
+    <section class="side-controls">
+      <h2>Ação de fundo</h2>
+      <div class="background-controls"><label for="background-color">Cor do fundo</label><input id="background-color" type="color" value="#151b36"><button id="change-background">Alterar fundo</button></div>
+      <p class="hint">A cor aparece quando não há vídeo ou em vídeos com transparência. O vídeo preenche toda a tela 9:16.</p>
+    </section>
+    <label class="sound"><input id="sound" type="checkbox"> Ativar som dos vídeos</label>
+    <p id="status" role="status" aria-live="polite">Adicione vídeos à sequência e escolha a ordem no painel.</p>
+  </aside>
+</main>
+<script src="/socket.io/socket.io.js"></script><script src="/lib/tiktok-bridge.js"></script><script type="module" src="game.js"></script>
+</body></html>
