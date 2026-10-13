@@ -1,0 +1,217 @@
+{
+  "perfil": "padrão",
+  "snapshots": [
+    {
+      "nome": "seis presentes",
+      "state": {
+        "lula": {
+          "pontos": 265,
+          "vitorias": 0
+        },
+        "flavio": {
+          "pontos": 265,
+          "vitorias": 0
+        }
+      },
+      "pisos": [
+        265,
+        265
+      ],
+      "pendentes": 0,
+      "temporarios": 0
+    },
+    {
+      "nome": "quarenta comentários",
+      "state": {
+        "lula": {
+          "pontos": 365,
+          "vitorias": 0
+        },
+        "flavio": {
+          "pontos": 365,
+          "vitorias": 0
+        }
+      },
+      "pisos": [
+        365,
+        365
+      ],
+      "pendentes": 0,
+      "temporarios": 0
+    },
+    {
+      "nome": "curtidas, follow e duplicação",
+      "state": {
+        "lula": {
+          "pontos": 0,
+          "vitorias": 0
+        },
+        "flavio": {
+          "pontos": 165,
+          "vitorias": 1
+        }
+      },
+      "pisos": [
+        0,
+        165
+      ],
+      "pendentes": 50,
+      "temporarios": 0
+    },
+    {
+      "nome": "ações durante a vitória",
+      "state": {
+        "lula": {
+          "pontos": 15,
+          "vitorias": 2
+        },
+        "flavio": {
+          "pontos": 5,
+          "vitorias": 1
+        }
+      },
+      "pisos": [
+        15,
+        5
+      ],
+      "pendentes": 50,
+      "temporarios": 0
+    },
+    {
+      "nome": "sequência e fim duplicado",
+      "state": {
+        "lula": {
+          "pontos": 60,
+          "vitorias": 2
+        },
+        "flavio": {
+          "pontos": 5,
+          "vitorias": 1
+        }
+      },
+      "pisos": [
+        60,
+        5
+      ],
+      "pendentes": 50,
+      "temporarios": 0
+    },
+    {
+      "nome": "redimensionar durante a queda",
+      "state": {
+        "lula": {
+          "pontos": 255,
+          "vitorias": 2
+        },
+        "flavio": {
+          "pontos": 5,
+          "vitorias": 1
+        }
+      },
+      "pisos": [
+        255,
+        5
+      ],
+      "pendentes": 50,
+      "temporarios": 0
+    }
+  ],
+  "velocidade": {
+    "tempoMs": 6284,
+    "quadros": 342,
+    "intervaloP95Ms": 33,
+    "intervaloMaxMs": 50
+  },
+  "recursos": {
+    "status": [
+      {
+        "ref": "http://127.0.0.1:64978/games/batalha-blocos/assets/estrela.svg",
+        "status": 200
+      },
+      {
+        "ref": "http://127.0.0.1:64978/games/batalha-blocos/style.css",
+        "status": 200
+      },
+      {
+        "ref": "http://127.0.0.1:64978/games/batalha-blocos/assets/fundonovobatalha.mp4",
+        "status": 200
+      },
+      {
+        "ref": "http://127.0.0.1:64978/games/duelo-2d/icones/tiktok-heart.png",
+        "status": 200
+      },
+      {
+        "ref": "http://127.0.0.1:64978/games/duelo-2d/icones/rose.webp",
+        "status": 200
+      },
+      {
+        "ref": "http://127.0.0.1:64978/games/duelo-2d/icones/tiny-diny.webp",
+        "status": 200
+      },
+      {
+        "ref": "http://127.0.0.1:64978/games/duelo-2d/icones/heart-my-earthling.webp",
+        "status": 200
+      },
+      {
+        "ref": "http://127.0.0.1:64978/games/duelo-2d/icones/voceedemais.webp",
+        "status": 200
+      },
+      {
+        "ref": "http://127.0.0.1:64978/games/duelo-2d/icones/coroa.webp",
+        "status": 200
+      },
+      {
+        "ref": "http://127.0.0.1:64978/games/duelo-2d/icones/seguir.png",
+        "status": 200
+      },
+      {
+        "ref": "http://127.0.0.1:64978/games/duelo-2d/icones/gg.webp",
+        "status": 200
+      },
+      {
+        "ref": "http://127.0.0.1:64978/games/duelo-2d/icones/heart.webp",
+        "status": 200
+      },
+      {
+        "ref": "http://127.0.0.1:64978/games/duelo-2d/icones/confetti.webp",
+        "status": 200
+      },
+      {
+        "ref": "http://127.0.0.1:64978/games/duelo-2d/icones/pistoladinheiro.webp",
+        "status": 200
+      },
+      {
+        "ref": "http://127.0.0.1:64978/games/duelo-2d/icones/galaxia.webp",
+        "status": 200
+      },
+      {
+        "ref": "http://127.0.0.1:64978/games/batalha-blocos/assets/som-lula.wav",
+        "status": 200
+      },
+      {
+        "ref": "http://127.0.0.1:64978/games/batalha-blocos/assets/som-flavio.wav",
+        "status": 200
+      },
+      {
+        "ref": "http://127.0.0.1:64978/games/batalha-blocos/assets/vitorialula%20(2).mp3",
+        "status": 200
+      },
+      {
+        "ref": "http://127.0.0.1:64978/games/batalha-blocos/assets/vitoriaflavio.mp3",
+        "status": 200
+      }
+    ],
+    "topoVisivel": true,
+    "video": {
+      "muted": true,
+      "loop": true,
+      "readyState": 4
+    },
+    "audio": {
+      "lula": null,
+      "flavio": null
+    },
+    "efeitos": 0
+  },
+  "erros": []
+}

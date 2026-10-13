@@ -61,7 +61,7 @@ body { display:grid; place-items:center; background:#080808; color:white; font-f
 
 #ativar-audio { position:absolute; z-index:35; right:6px; bottom:7px; cursor:pointer; padding:8px 10px; border:1px solid #ffe35c; border-radius:8px; color:#fff; background:#151515ea; font-size:11px; font-weight:bold; }
 
-/* Barras empilhadas, queda e impactos da batalha de 1.000 blocos. */
+/* Barras empilhadas, queda e impactos da batalha de 500 blocos. */
 .topbar { align-items:center; gap:12px; padding:7px 6px; background:linear-gradient(#000b,transparent); }
 .meta { padding:5px 9px; border:1px solid #ffdc36; border-radius:20px; background:#17130dde; color:#ffdc36; font-size:9px; font-weight:900; box-shadow:0 0 12px #ffdc3633; }
 .meta strong { font-size:15px; }
@@ -103,4 +103,15 @@ body { display:grid; place-items:center; background:#080808; color:white; font-f
 @keyframes chuva-confete { to { top:110%; transform:translateX(35px) rotate(720deg); opacity:.3; } }
 @keyframes brilho-vitoria { to { box-shadow:inset 0 0 50px #ffdc3666; } }
 @keyframes presente-flutua { 0%,100% { transform:translateY(1px) rotate(-3deg); } 50% { transform:translateY(-3px) rotate(3deg); } }
-@media (prefers-reduced-motion:reduce) { .bloco-caindo,.particula,.confete { display:none; } .faixa,.impacto .torre,.celebrando,.presente img,.interacao img,.interacao-icone { animation:none; } }
+#game { --altura-piso:clamp(10px,2.25vh,20px); --camera-y:0px; }
+.torre-base { transform:translateY(var(--camera-y)); transition:transform .08s linear; will-change:transform; }
+.faixa,.bloco-caindo { height:var(--altura-piso); }
+.torre { filter:none; }
+.faixa,.faixa:nth-last-child(-n+40) { animation:none; }
+.torre { animation:piso-flutua 3.6s ease-in-out infinite; }
+.bloco-caindo { animation-duration:.22s; box-shadow:inset -5px -2px #0003; }
+.estrela-lula,.bandeira-flavio { top:auto; bottom:0; height:var(--altura-torre,0px); }
+.estrela-lula,.bandeira-flavio { background-position:center bottom; background-repeat:repeat-y; filter:none; }
+@media (max-aspect-ratio:9/16) { #game { --altura-piso:clamp(10px,4vw,20px); } }
+@media (prefers-reduced-motion:reduce) { .torre-base { transition:none; } }
+@media (prefers-reduced-motion:reduce) { .bloco-caindo,.particula,.confete { display:none; } .faixa,.torre,.impacto .torre,.celebrando,.presente img,.interacao img,.interacao-icone { animation:none; } }

@@ -1,9 +1,8 @@
 "use strict";
 
-const META = 1000;
-const PISOS_POR_FAIXA = META / 40;
+const META = 500;
+const TEMPO_QUEDA = 220;
 const TEMPO_VITORIA = 2600;
-const TEMPO_BLOCO = 65;
 
 const PRESENTES = Object.freeze({
   5655: { lado: "lula", nome: "Rose", blocos: 15 },
@@ -57,6 +56,10 @@ function atualizarHUD() {
     el.numeros[lado].style.bottom = "auto";
     el.infos[lado].textContent = `TORRE: ${state[lado].pontos}/${META}`;
     el.placar[lado].textContent = state[lado].vitorias;
+    const torre = el.torres[lado];
+    torre.parentElement.style.setProperty('--altura-torre', 'calc(' + torre.children.length + ' * var(--altura-piso))');
+    const simbolo = document.getElementById(lado === 'lula' ? 'estrela-lula' : 'bandeira-flavio');
+    if (simbolo) simbolo.style.clipPath = state[lado].pontos ? 'inset(0 0 0 0)' : 'inset(100% 0 0 0)';
   }
 }
 
@@ -73,55 +76,100 @@ function esperar(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-// Quarenta barras representam os 1.000 blocos sem sobrecarregar a tela.
-function criarBloco(lado, numero) {
-  const fileira = Math.floor((numero - 1) / PISOS_POR_FAIXA);
-  const progresso = ((numero - 1) % PISOS_POR_FAIXA) + 1;
-  const torre = el.torres[lado];
-  let faixa = torre.children[fileira];
-  if (!faixa) {
-    faixa = document.createElement("div");
-    faixa.className = "faixa";
-    if (lado === "flavio") faixa.classList.add(fileira % 2 === 0 ? "verde" : "amarelo");
-    faixa.style.bottom = `${fileira * 2.5}%`;
-    faixa.style.setProperty('--desvio', `${Math.sin(fileira * 7.3) * 4}px`);
-    torre.appendChild(faixa);
-  }
-  faixa.style.width = "100%";
-  // Os símbolos aparecem de baixo para cima junto com a torre.
-  const revelacao = document.getElementById(lado === "lula" ? "estrela-lula" : "bandeira-flavio");
-  if (revelacao) revelacao.style.clipPath = `inset(${100 - (numero / META * 100)}% 0 0 0)`;
-  animarQueda(lado, numero);
+// Cada ponto corresponde a um piso real na torre.
+let medidasArena;
+function medirArena() {
+  medidasArena = {
+    piso: Math.max(10, Math.min(20, document.getElementById('game').clientWidth * .04)),
+    altura: el.torres.lula.parentElement.clientHeight
+  };
+}
+function alturaPiso() {
+  if (!medidasArena) medirArena();
+  return medidasArena.piso;
 }
 
-const ultimoImpacto = { lula: 0, flavio: 0 };
-function animarQueda(lado, numero) {
-  // Um efeito por lote evita centenas de sons e elementos simultâneos.
-  const agora = performance.now();
-  if (agora - ultimoImpacto[lado] < 60) return;
-  ultimoImpacto[lado] = agora;
+function atualizarCamera(quantidade = 0, lado) {
+  const game = document.getElementById('game');
+  const altura = Math.max(
+    el.torres.lula.children.length + (lado === 'lula' ? quantidade : 0),
+    el.torres.flavio.children.length + (lado === 'flavio' ? quantidade : 0)
+  ) * alturaPiso();
+  const deslocamento = Math.max(0, altura - medidasArena.altura * .58);
+  game.style.setProperty('--camera-y', deslocamento + 'px');
+}
+
+function criarBloco(lado, numero, valor) {
+  const torre = el.torres[lado];
+  const fileira = torre.children.length;
+  const faixa = document.createElement('div');
+  faixa.className = 'faixa';
+  if (lado === 'flavio') faixa.classList.add('verde');
+  faixa.style.bottom = 'calc(' + fileira + ' * var(--altura-piso))';
+  faixa.style.setProperty('--desvio', Math.sin(fileira * 7.3) * 4 + 'px');
+  faixa.style.width = '100%';
+  faixa.title = '+' + valor + ' blocos';
+  torre.appendChild(faixa);
+}
+
+async function animarQueda(lado, quantidade = 1, aoPousar) {
   const base = el.torres[lado].parentElement;
-  const bloco = document.createElement('div');
-  bloco.className = `bloco-caindo bloco-${lado}`;
-  bloco.style.bottom = `${Math.floor((numero - 1) / PISOS_POR_FAIXA) * 2.5}%`;
-  bloco.style.setProperty('--queda', `${-base.clientHeight}px`);
-  base.appendChild(bloco);
-  setTimeout(() => {
-    bloco.remove();
-    reproduzirSomBloco(lado);
-    base.classList.remove('impacto');
-    void base.offsetWidth;
-    base.classList.add('impacto');
-    for (let i = 0; i < 5; i++) {
-      const particula = document.createElement('i');
-      particula.className = `particula particula-${lado}`;
-      particula.style.bottom = bloco.style.bottom;
-      particula.style.setProperty('--dx', `${(Math.random() - .5) * 120}px`);
-      particula.style.setProperty('--dy', `${-15 - Math.random() * 65}px`);
-      base.appendChild(particula);
-      setTimeout(() => particula.remove(), 550);
-    }
-  }, 320);
+  const fileira = el.torres[lado].children.length;
+  const altura = alturaPiso();
+  const alturaBase = medidasArena.altura;
+  const intervalo = Math.max(2, Math.min(12, 700 / quantidade));
+  const inicio = performance.now();
+  const caindo = [];
+  let lancados = 0;
+  let pousados = 0;
+  let ultimoEfeito = -Infinity;
+  await new Promise((resolve, reject) => {
+    const frame = agora => {
+      try {
+        const alvo = Math.min(quantidade, Math.floor((agora - inicio) / intervalo) + 1);
+        const camera = parseFloat(document.getElementById('game').style.getPropertyValue('--camera-y')) || 0;
+        const fragmento = document.createDocumentFragment();
+        for (let limite = 0; lancados < alvo && limite < 24; limite++) {
+          const bloco = document.createElement('div');
+          bloco.className = 'bloco-caindo bloco-' + lado;
+          bloco.style.bottom = 'calc(' + (fileira + lancados) + ' * var(--altura-piso))';
+          bloco.style.setProperty('--queda', -Math.max(80, alturaBase - (fileira + lancados) * altura + camera) + 'px');
+          fragmento.appendChild(bloco);
+          caindo.push({ bloco, pouso: agora + TEMPO_QUEDA });
+          lancados++;
+        }
+        if (fragmento.childNodes.length) base.appendChild(fragmento);
+        let mudou = false;
+        while (pousados < caindo.length && caindo[pousados].pouso <= agora) {
+          caindo[pousados].bloco.remove();
+          aoPousar();
+          pousados++;
+          mudou = true;
+        }
+        if (mudou) {
+          atualizarCamera();
+          atualizarHUD();
+          if (agora - ultimoEfeito >= 120) {
+            ultimoEfeito = agora;
+            reproduzirSomBloco(lado);
+            const particula = document.createElement('i');
+            particula.className = 'particula particula-' + lado;
+            particula.style.bottom = 'calc(' + (fileira + pousados - 1) + ' * var(--altura-piso))';
+            particula.style.setProperty('--dx', (Math.random() - .5) * 80 + 'px');
+            particula.style.setProperty('--dy', '-35px');
+            base.appendChild(particula);
+            setTimeout(() => particula.remove(), 550);
+          }
+        }
+        if (pousados === quantidade) resolve();
+        else requestAnimationFrame(frame);
+      } catch (erro) {
+        for (const item of caindo) item.bloco.remove();
+        reject(erro);
+      }
+    };
+    requestAnimationFrame(frame);
+  });
 }
 
 function celebrarVitoria(lado) {
@@ -150,54 +198,75 @@ Object.values(SONS).forEach(audio => {
   audio.preload = "auto";
 });
 let audioLiberado = false;
+const canaisImpacto = Object.fromEntries(['lula', 'flavio'].map(lado => [lado,
+  Array.from({ length: 3 }, () => {
+    const audio = SONS[lado].cloneNode();
+    audio.volume = 0.24;
+    audio.preload = 'auto';
+    return { audio, ocupado: false, token: 0 };
+  })
+]));
+let ultimoSomImpacto = -Infinity;
 function liberarAudio() {
   audioLiberado = true;
   const botao = document.getElementById("ativar-audio");
   if (botao) botao.remove();
 }
 const botaoAudio = document.getElementById("ativar-audio");
-if (botaoAudio) botaoAudio.addEventListener("click", () => {
-  // Libera a reprodução automática no Chrome/Electron após um gesto do usuário.
-  Object.values(SONS).forEach(audio => {
-    audio.muted = true;
-    audio.play().then(() => { audio.pause(); audio.currentTime = 0; audio.muted = false; }).catch(() => {});
-  });
-  liberarAudio();
-});
+if (botaoAudio) botaoAudio.addEventListener("click", liberarAudio);
 document.addEventListener("pointerdown", liberarAudio, { once: true });
 document.addEventListener("keydown", liberarAudio, { once: true });
 function reproduzirSomBloco(lado) {
-  if (!audioLiberado) return;
-  const original = SONS[lado];
-  if (!original) return;
-  // Pequenos sons podem se sobrepor sem interromper o anterior.
-  const audio = original.cloneNode();
-  audio.volume = original.volume;
-  audio.play().catch(() => {});
-  audio.addEventListener("ended", () => { audio.src = ""; }, { once: true });
+  if (!audioLiberado || finalizando) return;
+  const agora = performance.now();
+  if (agora - ultimoSomImpacto < 120) return;
+  const canal = canaisImpacto[lado]?.find(item => !item.ocupado);
+  if (!canal) return;
+  ultimoSomImpacto = agora;
+  canal.ocupado = true;
+  const token = canal.token = (canal.token || 0) + 1;
+  canal.audio.currentTime = 0;
+  const liberar = () => { if (canal.token === token) canal.ocupado = false; };
+  canal.audio.onended = liberar;
+  canal.audio.onerror = liberar;
+  canal.audio.play().catch(liberar);
+}
+
+function pararSonsImpacto() {
+  for (const canais of Object.values(canaisImpacto)) {
+    for (const canal of canais) {
+      canal.audio.pause();
+      canal.token = (canal.token || 0) + 1;
+      canal.audio.currentTime = 0;
+      canal.ocupado = false;
+    }
+  }
 }
 
 async function animarPresente({ lado, nome, blocos }) {
   adicionarEvento(`${lado.toUpperCase()} recebeu ${nome} (+${blocos})`);
 
-  // Presentes grandes animam em lotes em até cerca de três segundos.
-  const passo = Math.max(1, Math.ceil(blocos / 45));
   let restantes = blocos;
-  while (restantes > 0) {
-    const novos = Math.min(passo, restantes, META - state[lado].pontos);
-    for (let i = 0; i < novos; i++) {
-      state[lado].pontos++;
-      criarBloco(lado, state[lado].pontos);
+  try {
+    while (restantes > 0) {
+      const novos = Math.min(restantes, META - state[lado].pontos);
+      await animarQueda(lado, novos, () => {
+        criarBloco(lado, state[lado].pontos + 1, 1);
+        state[lado].pontos++;
+        restantes--;
+      });
+      if (state[lado].pontos >= META) await encerrarRodada(lado);
     }
-    restantes -= novos;
-    atualizarHUD();
-    await esperar(TEMPO_BLOCO);
-    if (state[lado].pontos >= META) await encerrarRodada(lado);
+  } catch (erro) {
+    const falha = erro instanceof Error ? erro : new Error(String(erro));
+    falha.blocosRestantes = restantes;
+    throw falha;
   }
 }
 
 async function encerrarRodada(vencedor) {
   finalizando = true;
+  pararSonsImpacto();
   celebrarVitoria(vencedor);
   if (audioLiberado) {
     SONS.vitoria_lula.pause();
@@ -219,6 +288,8 @@ async function encerrarRodada(vencedor) {
   state.flavio.pontos = 0;
   el.torres.lula.replaceChildren();
   el.torres.flavio.replaceChildren();
+  for (const torre of Object.values(el.torres)) torre.parentElement.style.setProperty('--altura-torre', '0px');
+  atualizarCamera();
   for (const id of ["estrela-lula", "bandeira-flavio"]) {
     const simbolo = document.getElementById(id);
     if (simbolo) simbolo.style.clipPath = "inset(100% 0 0 0)";
@@ -233,14 +304,26 @@ async function encerrarRodada(vencedor) {
 async function processarFila() {
   if (processando) return;
   processando = true;
+  let falhou = false;
   try {
     while (fila.length > 0) {
       const evento = fila.shift();
-      await animarPresente(evento);
+      const blocos = Math.min(100, evento.blocos);
+      // Alternar os eventos impede um presente grande de prender os demais.
+      if (evento.blocos > blocos) fila.push({ ...evento, blocos: evento.blocos - blocos });
+      try {
+        await animarPresente({ ...evento, blocos });
+      } catch (erro) {
+        const pendentes = erro.blocosRestantes ?? blocos;
+        if (pendentes > 0) fila.unshift({ ...evento, blocos: pendentes });
+        falhou = true;
+        console.error('[BLOCOS] Falha na animação. Ações pendentes preservadas; o próximo evento retoma a fila.', erro);
+        break;
+      }
     }
   } finally {
     processando = false;
-    if (fila.length) void processarFila();
+    if (fila.length && !falhou) void processarFila();
   }
 }
 
@@ -260,7 +343,8 @@ function receberPresente(lado, presente, valor) {
 function receberPresenteTikTok(giftId, quantidade = 1) {
   const presente = encontrarPresente({ giftId, giftName: giftId });
   if (!presente) return false;
-  const total = Math.max(1, Math.min(1000, Math.floor(Number(quantidade) || 1)));
+  const total = Number(quantidade);
+  if (!Number.isSafeInteger(total) || total < 1 || total > 1000) return false;
   for (let i = 0; i < total; i++) fila.push({ ...presente });
   void processarFila();
   return true;
@@ -276,10 +360,9 @@ adicionarEvento("Batalha dos Blocos carregada.");
 // INTEGRAÇÃO TIKTOK: seguir, curtir, comentar e presentes
 // =====================================================
 const SOCIAL = { curtidasPendentes: 0, follows: new Map(), presentes: new Map() };
-const LIMITE_CACHES = 1000;
 
 function enfileirarBlocos(lado, nome, blocos) {
-  if (!state[lado] || !Number.isSafeInteger(blocos) || blocos <= 0) return false;
+  if (!['lula', 'flavio'].includes(lado) || !Number.isSafeInteger(blocos) || blocos <= 0) return false;
   fila.push({ lado, nome, blocos });
   void processarFila();
   return true;
@@ -288,11 +371,8 @@ function enfileirarBlocos(lado, nome, blocos) {
 function registrarSeguidor(usuario) {
   const id = String(usuario?.uniqueId || usuario?.userId || "").trim().toLowerCase();
   // Um follow da mesma conta conta uma vez por sessão do navegador.
-  if (!id || SOCIAL.follows.has(id)) return false;
+  if (!id || id === '0' || SOCIAL.follows.has(id)) return false;
   SOCIAL.follows.set(id, Date.now());
-  if (SOCIAL.follows.size > LIMITE_CACHES) {
-    SOCIAL.follows.delete(SOCIAL.follows.keys().next().value);
-  }
   return enfileirarBlocos("flavio", `Novo seguidor: ${id}`, 300);
 }
 
@@ -322,7 +402,7 @@ function encontrarPresente(payload) {
   if (porId) return porId;
   const normalizar = nome => String(nome ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/’/g, "'").trim().toLowerCase();
   const nome = normalizar(payload?.giftName);
-  return Object.values(PRESENTES).find(p => p.aliases?.some(alias => normalizar(alias) === nome));
+  return Object.values(PRESENTES).find(p => [p.nome, ...(p.aliases || [])].some(alias => normalizar(alias) === nome));
 }
 
 function registrarPresenteReal(payload) {
@@ -332,7 +412,8 @@ function registrarPresenteReal(payload) {
   // Presentes de sequência: aguardar fim da sequência para não contar cumulativos.
   const tipo = Number(payload?.rawGiftType ?? payload?.giftType);
   const fim = [true, 1, "1", "true"].includes(payload?.repeatEnd);
-  const emSequencia = tipo === 1 || [false, 0, "0", "false"].includes(payload?.repeatEnd);
+  const emAndamento = [false, 0, "0", "false"].includes(payload?.repeatEnd);
+  const emSequencia = tipo === 1 || (!Number.isFinite(tipo) && (emAndamento || fim));
   if (emSequencia && !fim) return false;
   const qtd = Number(payload?.repeatCount ?? 1);
   if (!Number.isSafeInteger(qtd) || qtd < 1 || qtd > 1000) return false;
@@ -342,7 +423,7 @@ function registrarPresenteReal(payload) {
   const eventId = payload?.eventId ?? payload?.msgId ?? payload?.common?.msgId;
   // O fim da mesma sequência pode chegar em mensagens com IDs diferentes.
   const temGrupo = grupo != null && String(grupo) !== "" && String(grupo) !== "0";
-  const key = temGrupo && remetente
+  const key = emSequencia && temGrupo && remetente
     ? `grupo:${remetente}:${presente.nome || id}:${grupo}`
     : eventId != null && String(eventId) !== "0" && String(eventId) !== ""
       ? `evento:${eventId}`
@@ -350,9 +431,6 @@ function registrarPresenteReal(payload) {
   if (key !== null) {
     if (SOCIAL.presentes.has(key)) return false;
     SOCIAL.presentes.set(key, Date.now());
-    if (SOCIAL.presentes.size > LIMITE_CACHES) {
-      SOCIAL.presentes.delete(SOCIAL.presentes.keys().next().value);
-    }
   }
   for (let i = 0; i < qtd; i++) fila.push({ ...presente });
   void processarFila();
@@ -389,6 +467,7 @@ window.testeSeguir = (usuario = "teste_usuario") => registrarSeguidor({ uniqueId
 window.testeCurtidas = quantidade => registrarCurtidas(quantidade);
 window.testeComentario = texto => registrarComentario(texto);
 window.testeBlocos = (lado, quantidade = 100) => enfileirarBlocos(lado, 'Simulação', quantidade);
+window.addEventListener('resize', () => { medirArena(); atualizarCamera(); });
 
 if (new URLSearchParams(location.search).get("teste") === "1") {
   document.body.classList.add("modo-teste");

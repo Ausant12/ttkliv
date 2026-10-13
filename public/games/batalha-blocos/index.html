@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Batalha dos Blocos</title>
+  <link rel="icon" href="assets/estrela.svg" type="image/svg+xml">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -14,11 +15,11 @@
   </video>
   <button id="ativar-audio" type="button">🔊 ATIVAR SONS</button>
   <header class="topbar">
-    <div class="meta">META <strong>1.000</strong> BLOCOS</div>
+    <div class="meta">META <strong>500</strong> BLOCOS</div>
   </header>
   <main class="arena">
     <section class="lado lado-lula"><div class="conteudo-lado">
-      <div class="cabecalho-lado"><h2>LULA</h2><div class="torre-info" id="info-lula">TORRE: 0/1000</div></div>
+      <div class="cabecalho-lado"><h2>LULA</h2><div class="torre-info" id="info-lula">TORRE: 0/500</div></div>
       <div class="torre-area"><div class="torre-base"><div class="torre torre-lula" id="torre-lula"></div><div class="estrela-lula" id="estrela-lula"></div></div><div class="numero-grande lula-num" id="numero-lula">0</div></div>
       <div class="presentes">
         <div class="interacao"><img src="../duelo-2d/icones/tiktok-heart.png" alt="Curtidas"><small>200 curtidas</small><strong>+100</strong></div>
@@ -36,7 +37,7 @@
       <div class="feed-eventos" id="feed-eventos"><div class="evento">Aguardando presentes...</div></div>
     </section>
     <section class="lado lado-flavio"><div class="conteudo-lado">
-      <div class="cabecalho-lado"><h2>FLÁVIO</h2><div class="torre-info" id="info-flavio">TORRE: 0/1000</div></div>
+      <div class="cabecalho-lado"><h2>FLÁVIO</h2><div class="torre-info" id="info-flavio">TORRE: 0/500</div></div>
       <div class="torre-area"><div class="torre-base"><div class="torre torre-flavio" id="torre-flavio"></div><div class="bandeira-flavio" id="bandeira-flavio"></div></div><div class="numero-grande flavio-num" id="numero-flavio">0</div></div>
       <div class="presentes">
         <div class="interacao"><img src="../duelo-2d/icones/seguir.png" alt="Seguir"><small>Seguir</small><strong>+300</strong></div>
@@ -52,7 +53,7 @@
   <div class="overlay-vitoria hidden" id="overlay-vitoria"><div class="card-vitoria"><h2 id="titulo-vitoria">VITÓRIA!</h2><p id="texto-vitoria">Fim da rodada</p></div></div>
   <section class="painel-teste"><h3>Simular presentes — Lula / Flávio</h3><div class="botoes-teste">
     <button onclick="testeBlocos('lula',100)">Lula +100 blocos</button><button onclick="testeBlocos('flavio',100)">Flávio +100 blocos</button>
-    <button onclick="testeBlocos('lula',1000)">Lula +1.000 blocos</button><button onclick="testeBlocos('flavio',1000)">Flávio +1.000 blocos</button>
+    <button onclick="testeBlocos('lula',500)">Lula +500 blocos</button><button onclick="testeBlocos('flavio',500)">Flávio +500 blocos</button>
     <button onclick="receberPresenteTikTok(5655)">Rose +15</button><button onclick="receberPresenteTikTok(6064)">GG +15</button>
     <button onclick="receberPresenteTikTok(6560)">Tiny Diny +50</button><button onclick="receberPresenteTikTok(5327)">Heart +50</button>
     <button onclick="receberPresenteTikTok(544015)">Earthling +200</button><button onclick="receberPresenteTikTok(5585)">Confetti +200</button>
