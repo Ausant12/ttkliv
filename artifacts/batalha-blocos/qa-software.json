@@ -5,17 +5,17 @@
       "nome": "seis presentes",
       "state": {
         "lula": {
-          "pontos": 265,
-          "vitorias": 0
+          "pontos": 0,
+          "vitorias": 1
         },
         "flavio": {
-          "pontos": 265,
-          "vitorias": 0
+          "pontos": 0,
+          "vitorias": 1
         }
       },
       "pisos": [
-        265,
-        265
+        0,
+        0
       ],
       "pendentes": 0,
       "temporarios": 0
@@ -24,17 +24,17 @@
       "nome": "quarenta comentários",
       "state": {
         "lula": {
-          "pontos": 365,
-          "vitorias": 0
+          "pontos": 100,
+          "vitorias": 1
         },
         "flavio": {
-          "pontos": 365,
-          "vitorias": 0
+          "pontos": 100,
+          "vitorias": 1
         }
       },
       "pisos": [
-        365,
-        365
+        6,
+        6
       ],
       "pendentes": 0,
       "temporarios": 0
@@ -43,17 +43,17 @@
       "nome": "curtidas, follow e duplicação",
       "state": {
         "lula": {
-          "pontos": 0,
-          "vitorias": 0
+          "pontos": 200,
+          "vitorias": 1
         },
         "flavio": {
-          "pontos": 165,
+          "pontos": 300,
           "vitorias": 1
         }
       },
       "pisos": [
-        0,
-        165
+        13,
+        20
       ],
       "pendentes": 50,
       "temporarios": 0
@@ -62,8 +62,8 @@
       "nome": "ações durante a vitória",
       "state": {
         "lula": {
-          "pontos": 15,
-          "vitorias": 2
+          "pontos": 215,
+          "vitorias": 6
         },
         "flavio": {
           "pontos": 5,
@@ -71,8 +71,8 @@
         }
       },
       "pisos": [
-        15,
-        5
+        14,
+        0
       ],
       "pendentes": 50,
       "temporarios": 0
@@ -81,8 +81,8 @@
       "nome": "sequência e fim duplicado",
       "state": {
         "lula": {
-          "pontos": 60,
-          "vitorias": 2
+          "pontos": 260,
+          "vitorias": 6
         },
         "flavio": {
           "pontos": 5,
@@ -90,8 +90,8 @@
         }
       },
       "pisos": [
-        60,
-        5
+        17,
+        0
       ],
       "pendentes": 50,
       "temporarios": 0
@@ -100,8 +100,8 @@
       "nome": "redimensionar durante a queda",
       "state": {
         "lula": {
-          "pontos": 255,
-          "vitorias": 2
+          "pontos": 455,
+          "vitorias": 6
         },
         "flavio": {
           "pontos": 5,
@@ -109,95 +109,99 @@
         }
       },
       "pisos": [
-        255,
-        5
+        30,
+        0
       ],
       "pendentes": 50,
       "temporarios": 0
     }
   ],
   "velocidade": {
-    "tempoMs": 6412,
-    "quadros": 352,
-    "intervaloP95Ms": 33,
-    "intervaloMaxMs": 117
+    "tempoMs": 7796,
+    "quadros": 453,
+    "intervaloP95Ms": 17,
+    "intervaloMaxMs": 67
   },
   "recursos": {
     "status": [
       {
-        "ref": "http://127.0.0.1:64851/games/batalha-blocos/assets/estrela.svg",
+        "ref": "http://127.0.0.1:51905/games/batalha-blocos/assets/estrela.svg",
         "status": 200
       },
       {
-        "ref": "http://127.0.0.1:64851/games/batalha-blocos/style.css",
+        "ref": "http://127.0.0.1:51905/games/batalha-blocos/style.css",
         "status": 200
       },
       {
-        "ref": "http://127.0.0.1:64851/games/batalha-blocos/assets/fundonovobatalha.mp4",
+        "ref": "http://127.0.0.1:51905/games/batalha-blocos/assets/fundonovobatalha.mp4",
         "status": 200
       },
       {
-        "ref": "http://127.0.0.1:64851/games/duelo-2d/icones/tiktok-heart.png",
+        "ref": "http://127.0.0.1:51905/games/duelo-2d/icones/tiktok-heart.png",
         "status": 200
       },
       {
-        "ref": "http://127.0.0.1:64851/games/duelo-2d/icones/rose.webp",
+        "ref": "http://127.0.0.1:51905/games/duelo-2d/icones/rose.webp",
         "status": 200
       },
       {
-        "ref": "http://127.0.0.1:64851/games/duelo-2d/icones/tiny-diny.webp",
+        "ref": "http://127.0.0.1:51905/games/duelo-2d/icones/tiny-diny.webp",
         "status": 200
       },
       {
-        "ref": "http://127.0.0.1:64851/games/duelo-2d/icones/heart-my-earthling.webp",
+        "ref": "http://127.0.0.1:51905/games/duelo-2d/icones/heart-my-earthling.webp",
         "status": 200
       },
       {
-        "ref": "http://127.0.0.1:64851/games/duelo-2d/icones/voceedemais.webp",
+        "ref": "http://127.0.0.1:51905/games/duelo-2d/icones/voceedemais.webp",
         "status": 200
       },
       {
-        "ref": "http://127.0.0.1:64851/games/duelo-2d/icones/coroa.webp",
+        "ref": "http://127.0.0.1:51905/games/duelo-2d/icones/coroa.webp",
         "status": 200
       },
       {
-        "ref": "http://127.0.0.1:64851/games/duelo-2d/icones/seguir.png",
+        "ref": "http://127.0.0.1:51905/games/duelo-2d/icones/rose.webp",
         "status": 200
       },
       {
-        "ref": "http://127.0.0.1:64851/games/duelo-2d/icones/gg.webp",
+        "ref": "http://127.0.0.1:51905/games/duelo-2d/icones/seguir.png",
         "status": 200
       },
       {
-        "ref": "http://127.0.0.1:64851/games/duelo-2d/icones/heart.webp",
+        "ref": "http://127.0.0.1:51905/games/duelo-2d/icones/gg.webp",
         "status": 200
       },
       {
-        "ref": "http://127.0.0.1:64851/games/duelo-2d/icones/confetti.webp",
+        "ref": "http://127.0.0.1:51905/games/duelo-2d/icones/heart.webp",
         "status": 200
       },
       {
-        "ref": "http://127.0.0.1:64851/games/duelo-2d/icones/pistoladinheiro.webp",
+        "ref": "http://127.0.0.1:51905/games/duelo-2d/icones/confetti.webp",
         "status": 200
       },
       {
-        "ref": "http://127.0.0.1:64851/games/duelo-2d/icones/galaxia.webp",
+        "ref": "http://127.0.0.1:51905/games/duelo-2d/icones/pistoladinheiro.webp",
         "status": 200
       },
       {
-        "ref": "http://127.0.0.1:64851/games/batalha-blocos/assets/som-lula.wav",
+        "ref": "http://127.0.0.1:51905/games/duelo-2d/icones/galaxia.webp",
         "status": 200
       },
       {
-        "ref": "http://127.0.0.1:64851/games/batalha-blocos/assets/som-flavio.wav",
+        "ref": "http://127.0.0.1:51905/games/batalha-blocos/assets/som-lula.wav",
         "status": 200
       },
       {
-        "ref": "http://127.0.0.1:64851/games/batalha-blocos/assets/vitorialula%20(2).mp3",
+        "ref": "http://127.0.0.1:51905/games/batalha-blocos/assets/som-flavio.wav",
         "status": 200
       },
       {
-        "ref": "http://127.0.0.1:64851/games/batalha-blocos/assets/vitoriaflavio.mp3",
+        "ref": "http://127.0.0.1:51905/games/batalha-blocos/assets/vitorialula%20(2).mp3",
+        "status": 200
+      },
+      {
+        "ref": "http://127.0.0.1:51905/games/batalha-blocos/assets/vitoriaflavio.mp3",
         "status": 200
       }
     ],

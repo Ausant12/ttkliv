@@ -47,7 +47,7 @@ app.whenReady().then(async () => {
     await aguardar(`window.qaBarreira === ${barreira} && !processando && fila.length === 0`);
     const snapshot = await js(`({state:JSON.parse(JSON.stringify(state)),pisos:[el.torres.lula.children.length,el.torres.flavio.children.length],pendentes:SOCIAL.curtidasPendentes,temporarios:document.querySelectorAll('.bloco-caindo').length})`);
     snapshots.push({nome,...snapshot});
-    for(const lado of ['lula','flavio']) assert.equal(snapshot.state[lado].pontos,snapshot.pisos[lado==='lula'?0:1]);
+    for(const lado of ['lula','flavio']) assert.equal(Math.floor(snapshot.state[lado].pontos/15),snapshot.pisos[lado==='lula'?0:1]);
     assert.equal(snapshot.temporarios,0);
     return snapshot;
   };
@@ -68,12 +68,12 @@ app.whenReady().then(async () => {
     assert.equal(s.state.flavio.vitorias,17); assert.equal(s.state.flavio.pontos,0);
     const torres=await js('window.qaTorres');
     assert.equal(torres.length,17);
-    assert.ok(torres.every(torre=>torre.lado==='flavio'&&torre.pontos===500&&torre.pisos===500));
+    assert.ok(torres.every(torre=>torre.lado==='flavio'&&torre.pontos===500&&torre.pisos===34));
     assert.deepEqual(erros,[]);
     const destino=path.join(__dirname,'../artifacts/batalha-blocos');
     fs.mkdirSync(destino,{recursive:true});
     fs.writeFileSync(path.join(destino,'qa-saldo.json'),JSON.stringify({snapshots,torres,erros},null,2));
-    console.log(JSON.stringify({galaxia:12,presente2500:5,torresCom500:torres.length,erros}));
+    console.log(JSON.stringify({galaxia:12,presente2500:5,torresCom500Pontos:torres.length,erros}));
     win.destroy();io.close();server.close();app.quit();return;
   }
   await js(`window.qaFrames=[];window.qaAtivo=true;let anterior=performance.now();const medir=agora=>{if(!window.qaAtivo)return;window.qaFrames.push(agora-anterior);anterior=agora;requestAnimationFrame(medir)};requestAnimationFrame(medir);window.qaInicio=performance.now();`);

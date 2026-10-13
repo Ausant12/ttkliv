@@ -93,7 +93,7 @@ test("meta de 500 preserva excedente do presente após vitória", async () => {
   let vitorias = 0;
   const meta = Number(source.match(/const META = (\d+);/)[1]);
   assert.equal(meta, 500);
-  const context = vm.createContext({ mostrarEnvioPresente() {}, ocultarEnvioPresente() {}, META: meta, TEMPO_BLOCO: 65, state,
+  const context = vm.createContext({ mostrarEnvioPresente() {}, ocultarEnvioPresente() {}, META: meta, PONTOS_POR_PISO:15, TEMPO_BLOCO: 65, state,
     adicionarEvento() {}, atualizarCamera() {}, criarBloco() {}, atualizarHUD() {}, esperar: async () => {}, animarQueda: async (lado, quantidade, pousar) => { for (let i=0;i<quantidade;i++) pousar(); },
     encerrarRodada: async lado => { vitorias++; state[lado].pontos = 0; }
   });
@@ -112,13 +112,13 @@ test("presente sem grupo usa ID da mensagem sem bloquear outros presentes", () =
   assert.equal(eventos.length, 2);
 });
 
-test('200 blocos depositam 200 pisos e só somam pontos depois da queda', async () => {
+test('200 pontos depositam 13 pisos e preservam saldo de 5 e só somam pontos depois da queda', async () => {
   const source = fs.readFileSync(new URL('../public/games/batalha-blocos/game.js', import.meta.url), 'utf8');
   const state = { lula: { pontos: 0 } };
   const pisos = [];
   let pousar;
   const context = vm.createContext({ mostrarEnvioPresente() {}, ocultarEnvioPresente() {},
-    META: 500, TEMPO_BLOCO: 65, state,
+    META: 500, PONTOS_POR_PISO:15, TEMPO_BLOCO: 65, state,
     adicionarEvento() {}, atualizarCamera() {}, atualizarHUD() {}, esperar: async () => {},
     animarQueda: (lado, quantidade, depositar) => new Promise(resolve => { pousar = () => { for (let i=0;i<quantidade;i++) depositar(); resolve(); }; }),
     criarBloco: (...args) => pisos.push(args),
@@ -131,9 +131,9 @@ test('200 blocos depositam 200 pisos e só somam pontos depois da queda', async 
   pousar();
   await animacao;
   assert.equal(state.lula.pontos, 200);
-  assert.equal(pisos.length, 200);
-  assert.deepEqual(pisos[0], ['lula', 1, 1]);
-  assert.deepEqual(pisos[199], ['lula', 200, 1]);
+  assert.equal(pisos.length, 13);
+  assert.deepEqual(pisos[0], ['lula', 15, 15]);
+  assert.deepEqual(pisos[12], ['lula', 195, 15]);
 });
 
 test('câmera acompanha a torre mais alta e volta à base na rodada vazia', () => {
@@ -226,14 +226,17 @@ function simulacaoLive() {
   const handlers = {};
   const state = { lula: { pontos: 0, vitorias: 0 }, flavio: { pontos: 0, vitorias: 0 } };
   const depositados = { lula:0, flavio:0 };
+  const pisosCriados = { lula:0, flavio:0 };
+  const ultimos = { lula:0, flavio:0 };
   const context = vm.createContext({ mostrarEnvioPresente() {}, ocultarEnvioPresente() {},
     state, Date, URLSearchParams, console,
     location: { search: '?username=teste_local' },
     window: { io: () => ({ on(event, fn) { handlers[event] = fn; }, emit() {} }) },
-    adicionarEvento() {}, atualizarCamera() {}, criarBloco(lado) { depositados[lado]++; }, atualizarHUD() {}, esperar: async () => {}, animarQueda: async (lado, quantidade, pousar) => { for (let i=0;i<quantidade;i++) pousar(); },
+    adicionarEvento() {}, atualizarCamera() {}, criarBloco(lado) {pisosCriados[lado]++;}, atualizarHUD() { for(const lado of ["lula","flavio"]) { depositados[lado]+=Math.max(0,state[lado].pontos-ultimos[lado]);ultimos[lado]=state[lado].pontos; } }, esperar: async () => {}, animarQueda: async (lado, quantidade, pousar) => { for (let i=0;i<quantidade;i++) pousar(); },
     encerrarRodada: async lado => {
       state[lado].vitorias++;
       state.lula.pontos = state.flavio.pontos = 0;
+      ultimos.lula = ultimos.flavio = 0;
     }
   });
   const trechos = [
@@ -245,7 +248,7 @@ function simulacaoLive() {
     'conectarLive();'
   ];
   vm.runInContext(trechos.join('\n'), context);
-  return { state, handlers, depositados, async concluir() {
+  return { state, handlers, depositados, pisosCriados, async concluir() {
     for (let i = 0; i < 10000; i++) {
       if (!vm.runInContext('processando || fila.length > 0', context)) return;
       await Promise.resolve();
@@ -253,6 +256,30 @@ function simulacaoLive() {
     assert.fail('A fila de eventos não terminou');
   } };
 }
+
+test('três comentários criam um piso e uma Rose cria mais um', async () => {
+  const sim=simulacaoLive();
+  for(let i=1;i<=3;i++) {
+    sim.handlers.tiktok_chat({comment:'13'});
+    await sim.concluir();
+    assert.equal(sim.state.lula.pontos,i*5);
+    assert.equal(sim.pisosCriados.lula,Math.floor(i/3));
+  }
+  sim.handlers.tiktok_gift({giftId:5655,repeatCount:1,rawGiftType:2,eventId:'piso_rose'});
+  await sim.concluir();
+  assert.equal(sim.state.lula.pontos,30);
+  assert.equal(sim.pisosCriados.lula,2);
+});
+
+test('500 pontos geram 34 pisos e uma vitória sem arredondar a pontuação', async () => {
+  const sim=simulacaoLive();
+  sim.handlers.tiktok_gift({giftId:544015,repeatCount:1,rawGiftType:2,eventId:'piso_meta'});
+  await sim.concluir();
+  assert.equal(sim.pisosCriados.lula,34);
+  assert.equal(sim.depositados.lula,500);
+  assert.equal(sim.state.lula.vitorias,1);
+  assert.equal(sim.state.lula.pontos,0);
+});
 
 test('comentários só pontuam 13 e 22 e aceitam espaços externos', async () => {
   const sim = simulacaoLive();

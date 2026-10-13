@@ -1,5 +1,13 @@
 # Revisão da Batalha dos Blocos
 
+## Atualização: agrupamento visual de 15 pontos
+
+Cada piso visual agora representa 15 pontos. Três comentários de 5 pontos completam um piso; uma Rose de 15 cria um piso. Saldos menores que 15 permanecem no contador e completam o próximo piso. Ao atingir 500 pontos, o último piso representa os 5 pontos finais: a torre tem 34 pisos visuais e a pontuação continua exatamente 500.
+
+Os presentes de Você é Demais e Pistola de Dinheiro valem atualmente 2.500 pontos, Earthling e Confetti valem 500, e seguir vale 200. A Galáxia continua valendo 6.000 pontos e gera 12 vitórias. O agrupamento altera somente o desenho, mantendo os saldos, a fila e o aviso do remetente até terminar o envio.
+
+Os 30 testes atuais da batalha passaram. Os resultados abaixo descrevem revisões anteriores; as contagens antigas de um piso por ponto e os valores anteriores de presentes não representam a configuração atual.
+
 ## Resultado
 
 27 testes da batalha passaram. A suíte dos três jogos passou em 36 testes.

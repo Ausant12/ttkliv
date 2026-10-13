@@ -1,6 +1,7 @@
 "use strict";
 
 const META = 500;
+const PONTOS_POR_PISO = 15;
 const TEMPO_QUEDA = 220;
 const TEMPO_VITORIA = 2600;
 
@@ -76,7 +77,7 @@ function esperar(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-// Cada ponto corresponde a um piso real na torre.
+// Um piso visual representa 15 pontos; o contador mantém o valor exato.
 let medidasArena;
 function medirArena() {
   medidasArena = {
@@ -250,11 +251,24 @@ async function animarPresente({ lado, nome, blocos }) {
   try {
     while (restantes > 0) {
       const novos = Math.min(restantes, META - state[lado].pontos);
-      await animarQueda(lado, novos, () => {
-        criarBloco(lado, state[lado].pontos + 1, 1);
-        state[lado].pontos++;
-        restantes--;
-      });
+      const fim = state[lado].pontos + novos;
+      const pisos = Math.floor(fim / PONTOS_POR_PISO) - Math.floor(state[lado].pontos / PONTOS_POR_PISO)
+        + (fim === META && META % PONTOS_POR_PISO !== 0 ? 1 : 0);
+      if (pisos > 0) {
+        await animarQueda(lado, pisos, () => {
+          const pontos = Math.min(PONTOS_POR_PISO - state[lado].pontos % PONTOS_POR_PISO, restantes, META - state[lado].pontos);
+          criarBloco(lado, state[lado].pontos + pontos, Math.min(PONTOS_POR_PISO, META - Math.floor(state[lado].pontos / PONTOS_POR_PISO) * PONTOS_POR_PISO));
+          state[lado].pontos += pontos;
+          restantes -= pontos;
+        });
+      }
+      // O saldo inferior a 15 soma pontos e completa o próximo piso.
+      const saldo = Math.min(restantes, META - state[lado].pontos, PONTOS_POR_PISO - state[lado].pontos % PONTOS_POR_PISO - 1);
+      if (saldo > 0) {
+        state[lado].pontos += saldo;
+        restantes -= saldo;
+      }
+      atualizarHUD();
       if (state[lado].pontos >= META) await encerrarRodada(lado);
     }
   } catch (erro) {
