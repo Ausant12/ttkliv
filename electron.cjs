@@ -34,7 +34,7 @@ function criarJanela() {
     // Abre o nosso jogo (permite passar URL via argumento se desejado, ex: npx electron electron.cjs http://localhost:3000/games/duelo-2d-kim-nik/)
     const targetUrl = process.argv[2] && process.argv[2].startsWith("http")
         ? process.argv[2]
-        : "http://localhost:3000/games/batalha-blocos/?username=anny.fofinha4";
+        : "http://localhost:3000/games/batalha-blocos/?username=ougusto9";
 
     janela.loadURL(targetUrl);
 

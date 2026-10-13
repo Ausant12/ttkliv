@@ -37,7 +37,10 @@ body { display:grid; place-items:center; background:#080808; color:white; font-f
 .lado-lula .presentes { left:2px; }
 .lado-flavio .presentes { right:2px; }
 .presente { display:flex; align-items:center; flex-direction:column; gap:2px; }
-.presente img { width:30px; height:30px; object-fit:contain; }
+.presente img { width:30px; height:30px; object-fit:contain; animation:presente-flutua 3s ease-in-out infinite; }
+.presente:nth-child(2n) img { animation-delay:-1s; }
+.presente:nth-child(3n) img { animation-delay:-2s; }
+.lado-flavio .presente img { animation-direction:reverse; }
 .presente span { font-size:11px; font-weight:900; text-shadow:0 2px 4px #000; }
 .interacao { display:flex; flex-direction:column; align-items:center; gap:1px; width:100%; padding-bottom:4px; border-bottom:1px solid #ffffff35; }
 .interacao img { width:18px; height:18px; object-fit:contain; }
@@ -57,3 +60,47 @@ body { display:grid; place-items:center; background:#080808; color:white; font-f
 .botoes-teste button { cursor:pointer; padding:6px 3px; border:1px solid #ffffff55; border-radius:5px; color:white; background:#333; font-size:10px; }
 
 #ativar-audio { position:absolute; z-index:35; right:6px; bottom:7px; cursor:pointer; padding:8px 10px; border:1px solid #ffe35c; border-radius:8px; color:#fff; background:#151515ea; font-size:11px; font-weight:bold; }
+
+/* Barras empilhadas, queda e impactos da batalha de 1.000 blocos. */
+.topbar { align-items:center; gap:12px; padding:7px 6px; background:linear-gradient(#000b,transparent); }
+.meta { padding:5px 9px; border:1px solid #ffdc36; border-radius:20px; background:#17130dde; color:#ffdc36; font-size:9px; font-weight:900; box-shadow:0 0 12px #ffdc3633; }
+.meta strong { font-size:15px; }
+.score-box strong { font-size:22px; }
+.centro .score-box { position:absolute; top:32px; left:50%; transform:translateX(-50%); width:max-content; min-width:76px; z-index:15; padding:4px 8px; border-radius:10px; background:#0009; white-space:nowrap; }
+.interacao img,.interacao-icone { animation:presente-flutua 3s ease-in-out infinite; }
+.interacao-icone { display:inline-block; animation-delay:-1.5s; }
+.lado-flavio .interacao img,.lado-flavio .interacao-icone { animation-direction:reverse; }
+.cabecalho-lado h2 { font-size:19px; }
+.torre-info { margin:3px auto; font-size:9px; }
+.torre-area { top:12%; bottom:3%; }
+.torre-base { width:83%; max-width:160px; overflow:visible; }
+.torre { overflow:visible; filter:drop-shadow(3px 4px 3px #0008); }
+.faixa { height:2.5%; min-height:2px; left:var(--desvio,0px); border-radius:2px; border-top:1px solid #ffffff60; border-bottom:2px solid #0002; box-shadow:inset -5px 0 #0002,inset 0 2px #ffffff18; animation:barra-assenta .32s ease-out, piso-flutua 3.6s ease-in-out infinite; }
+.faixa:nth-child(3n+1) { animation-delay:0s,-1.2s; }
+.faixa:nth-child(3n+2) { animation-delay:0s,-2.4s; }
+.torre-flavio .faixa { animation-direction:normal,reverse; }
+.torre-lula .faixa { background:linear-gradient(90deg,#cf172b,#ff344a 45%,#e82038); }
+.torre-flavio .faixa.verde,.torre-flavio .faixa.amarelo { background:linear-gradient(90deg,#0ec34b,#26ef62 45%,#11cc51); }
+.estrela-lula { opacity:1; filter:drop-shadow(0 0 4px #ffffff80); }
+.bandeira-flavio { position:absolute; inset:0; background:url('assets/bandeira-brasil.svg') center/100% auto no-repeat; clip-path:inset(100% 0 0 0); pointer-events:none; filter:drop-shadow(0 1px 2px #0004); }
+.numero-grande { top:0; bottom:auto; font-size:clamp(26px,6vh,52px); text-shadow:0 3px 0 #0008,0 0 14px currentColor; }
+.lado .presentes { top:140px; }
+.lado-lula { --cor-impacto:#ff3347; }
+.lado-flavio { --cor-impacto:#20ef65; }
+.bloco-caindo { position:absolute; left:0; width:100%; height:2.5%; min-height:4px; z-index:8; border-radius:2px; border-top:2px solid #ffffff70; box-shadow:0 0 10px var(--cor-impacto),inset -5px -2px #0003; animation:bloco-queda .32s cubic-bezier(.55,.05,.9,.55) both; pointer-events:none; }
+.bloco-lula { background:#ff3347; }
+.bloco-flavio { background:#20ef65; }
+.impacto .torre { animation:torre-impacto .16s ease-out; }
+.particula { position:absolute; left:50%; width:4px; height:4px; background:var(--cor-impacto); box-shadow:0 0 6px var(--cor-impacto); z-index:10; animation:estilhaço .55s ease-out forwards; pointer-events:none; }
+.confete { position:absolute; top:-20px; width:7px; height:12px; z-index:40; animation:chuva-confete 1.8s ease-in forwards; pointer-events:none; }
+.celebrando { animation:brilho-vitoria .4s ease-in-out 6 alternate; }
+.card-vitoria { border-color:#ffdc36; }
+@keyframes bloco-queda { from { transform:translateY(var(--queda)) rotate(-3deg); opacity:.6; } to { transform:translateY(0) rotate(0); opacity:1; } }
+@keyframes barra-assenta { from { opacity:.25; } to { opacity:1; } }
+@keyframes piso-flutua { 0%,100% { transform:translate(-1px,0); } 50% { transform:translate(1px,-1.5px); } }
+@keyframes torre-impacto { 30% { transform:translateY(3px); } 65% { transform:translateY(-1px); } to { transform:translateY(0); } }
+@keyframes estilhaço { to { transform:translate(var(--dx),var(--dy)) rotate(160deg); opacity:0; } }
+@keyframes chuva-confete { to { top:110%; transform:translateX(35px) rotate(720deg); opacity:.3; } }
+@keyframes brilho-vitoria { to { box-shadow:inset 0 0 50px #ffdc3666; } }
+@keyframes presente-flutua { 0%,100% { transform:translateY(1px) rotate(-3deg); } 50% { transform:translateY(-3px) rotate(3deg); } }
+@media (prefers-reduced-motion:reduce) { .bloco-caindo,.particula,.confete { display:none; } .faixa,.impacto .torre,.celebrando,.presente img,.interacao img,.interacao-icone { animation:none; } }

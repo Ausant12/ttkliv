@@ -1,21 +1,21 @@
 "use strict";
 
-const META = 200;
-const PISOS_POR_FAIXA = META / 20;
+const META = 1000;
+const PISOS_POR_FAIXA = META / 40;
 const TEMPO_VITORIA = 2600;
 const TEMPO_BLOCO = 65;
 
 const PRESENTES = Object.freeze({
-  5655: { lado: "lula", nome: "Rose", blocos: 5 },
-  6560: { lado: "lula", nome: "Tiny Diny", blocos: 25 },
-  544015: { lado: "lula", nome: "Heart My Earthling", blocos: 100 },
-  6064: { lado: "flavio", nome: "GG", blocos: 5 },
-  5327: { lado: "flavio", nome: "Heart", blocos: 25 },
-  5585: { lado: "flavio", nome: "Confetti", blocos: 100 },
-  "Money Gun": { lado: "flavio", nome: "Pistola de Dinheiro", blocos: 600, aliases: ["Money Gun", "Pistola de Dinheiro"] },
-  "You're Amazing": { lado: "lula", nome: "Você é Demais", blocos: 600, aliases: ["You're Amazing", "You are Amazing", "Você é Demais"] },
-  "Accelerator Crown": { lado: "lula", nome: "Coroa do Acelerador", blocos: 1200, aliases: ["Accelerator Crown", "Coroa do Acelerador"] },
-  "Galaxy": { lado: "flavio", nome: "Galáxia", blocos: 1200, aliases: ["Galaxy", "Galáxia"] }
+  5655: { lado: "lula", nome: "Rose", blocos: 15 },
+  6560: { lado: "lula", nome: "Tiny Diny", blocos: 50 },
+  544015: { lado: "lula", nome: "Heart My Earthling", blocos: 200 },
+  6064: { lado: "flavio", nome: "GG", blocos: 15 },
+  5327: { lado: "flavio", nome: "Heart", blocos: 50 },
+  5585: { lado: "flavio", nome: "Confetti", blocos: 200 },
+  "Money Gun": { lado: "flavio", nome: "Pistola de Dinheiro", blocos: 1000, aliases: ["Money Gun", "Pistola de Dinheiro"] },
+  "You're Amazing": { lado: "lula", nome: "Você é Demais", blocos: 1000, aliases: ["You're Amazing", "You are Amazing", "Você é Demais"] },
+  "Accelerator Crown": { lado: "lula", nome: "Coroa do Acelerador", blocos: 6000, aliases: ["Accelerator Crown", "Coroa do Acelerador"] },
+  "Galaxy": { lado: "flavio", nome: "Galáxia", blocos: 6000, aliases: ["Galaxy", "Galáxia"] }
 });
 
 const state = {
@@ -53,10 +53,8 @@ let finalizando = false;
 function atualizarHUD() {
   for (const lado of ["lula", "flavio"]) {
     el.numeros[lado].textContent = state[lado].pontos;
-    // O número acompanha o topo da pilha e para antes de sair da arena.
-    // A torre usa 96% da altura de .torre-area.
-    const altura = (state[lado].pontos / META) * 96;
-    el.numeros[lado].style.bottom = `min(calc(${altura}% + 8px), calc(100% - 52px))`;
+    // Contadores fixos no alto, como na referência.
+    el.numeros[lado].style.bottom = "auto";
     el.infos[lado].textContent = `TORRE: ${state[lado].pontos}/${META}`;
     el.placar[lado].textContent = state[lado].vitorias;
   }
@@ -75,7 +73,7 @@ function esperar(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-// Vinte faixas mantêm a torre legível; o contador mostra cada piso.
+// Quarenta barras representam os 1.000 blocos sem sobrecarregar a tela.
 function criarBloco(lado, numero) {
   const fileira = Math.floor((numero - 1) / PISOS_POR_FAIXA);
   const progresso = ((numero - 1) % PISOS_POR_FAIXA) + 1;
@@ -85,22 +83,67 @@ function criarBloco(lado, numero) {
     faixa = document.createElement("div");
     faixa.className = "faixa";
     if (lado === "flavio") faixa.classList.add(fileira % 2 === 0 ? "verde" : "amarelo");
-    faixa.style.bottom = `${fileira * 5}%`;
+    faixa.style.bottom = `${fileira * 2.5}%`;
+    faixa.style.setProperty('--desvio', `${Math.sin(fileira * 7.3) * 4}px`);
     torre.appendChild(faixa);
   }
-  faixa.style.width = `${progresso / PISOS_POR_FAIXA * 100}%`;
-  // O desenho amarelo é revelado pela quantidade total de blocos.
-  if (lado === "lula") {
-    const revelacao = document.getElementById("estrela-lula");
-    if (revelacao) revelacao.style.clipPath = `inset(${100 - (numero / META * 100)}% 0 0 0)`;
+  faixa.style.width = "100%";
+  // Os símbolos aparecem de baixo para cima junto com a torre.
+  const revelacao = document.getElementById(lado === "lula" ? "estrela-lula" : "bandeira-flavio");
+  if (revelacao) revelacao.style.clipPath = `inset(${100 - (numero / META * 100)}% 0 0 0)`;
+  animarQueda(lado, numero);
+}
+
+const ultimoImpacto = { lula: 0, flavio: 0 };
+function animarQueda(lado, numero) {
+  // Um efeito por lote evita centenas de sons e elementos simultâneos.
+  const agora = performance.now();
+  if (agora - ultimoImpacto[lado] < 60) return;
+  ultimoImpacto[lado] = agora;
+  const base = el.torres[lado].parentElement;
+  const bloco = document.createElement('div');
+  bloco.className = `bloco-caindo bloco-${lado}`;
+  bloco.style.bottom = `${Math.floor((numero - 1) / PISOS_POR_FAIXA) * 2.5}%`;
+  bloco.style.setProperty('--queda', `${-base.clientHeight}px`);
+  base.appendChild(bloco);
+  setTimeout(() => {
+    bloco.remove();
+    reproduzirSomBloco(lado);
+    base.classList.remove('impacto');
+    void base.offsetWidth;
+    base.classList.add('impacto');
+    for (let i = 0; i < 5; i++) {
+      const particula = document.createElement('i');
+      particula.className = `particula particula-${lado}`;
+      particula.style.bottom = bloco.style.bottom;
+      particula.style.setProperty('--dx', `${(Math.random() - .5) * 120}px`);
+      particula.style.setProperty('--dy', `${-15 - Math.random() * 65}px`);
+      base.appendChild(particula);
+      setTimeout(() => particula.remove(), 550);
+    }
+  }, 320);
+}
+
+function celebrarVitoria(lado) {
+  const game = document.getElementById('game');
+  game.classList.add('celebrando');
+  for (let i = 0; i < 70; i++) {
+    const confete = document.createElement('i');
+    confete.className = 'confete';
+    confete.style.left = `${Math.random() * 100}%`;
+    confete.style.background = ['#ffdf38', '#ffffff', lado === 'lula' ? '#ff3347' : '#20ed69'][i % 3];
+    confete.style.animationDelay = `${Math.random() * .7}s`;
+    game.appendChild(confete);
+    setTimeout(() => confete.remove(), 2500);
   }
-  reproduzirSomBloco(lado);
+  setTimeout(() => game.classList.remove('celebrando'), TEMPO_VITORIA);
 }
 
 const SONS = {
   lula: new Audio("assets/som-lula.wav"),
   flavio: new Audio("assets/som-flavio.wav"),
-  vitoria: new Audio("assets/efeitovitoria.mp3")
+  vitoria_lula: new Audio("assets/vitorialula (2).mp3"),
+  vitoria_flavio: new Audio("assets/vitoriaflavio.mp3")
 };
 Object.values(SONS).forEach(audio => {
   audio.volume = 0.32;
@@ -155,9 +198,13 @@ async function animarPresente({ lado, nome, blocos }) {
 
 async function encerrarRodada(vencedor) {
   finalizando = true;
+  celebrarVitoria(vencedor);
   if (audioLiberado) {
-    SONS.vitoria.currentTime = 0;
-    SONS.vitoria.play().catch(() => {});
+    SONS.vitoria_lula.pause();
+    SONS.vitoria_flavio.pause();
+    const somVitoria = SONS[`vitoria_${vencedor}`];
+    somVitoria.currentTime = 0;
+    somVitoria.play().catch(() => {});
   }
   state[vencedor].vitorias++;
   atualizarHUD();
@@ -172,8 +219,10 @@ async function encerrarRodada(vencedor) {
   state.flavio.pontos = 0;
   el.torres.lula.replaceChildren();
   el.torres.flavio.replaceChildren();
-  const estrela = document.getElementById("estrela-lula");
-  if (estrela) estrela.style.clipPath = "inset(100% 0 0 0)";
+  for (const id of ["estrela-lula", "bandeira-flavio"]) {
+    const simbolo = document.getElementById(id);
+    if (simbolo) simbolo.style.clipPath = "inset(100% 0 0 0)";
+  }
   el.overlay.classList.add("hidden");
   delete el.overlay.dataset.vencedor;
   atualizarHUD();
@@ -244,7 +293,7 @@ function registrarSeguidor(usuario) {
   if (SOCIAL.follows.size > LIMITE_CACHES) {
     SOCIAL.follows.delete(SOCIAL.follows.keys().next().value);
   }
-  return enfileirarBlocos("flavio", `Novo seguidor: ${id}`, 20);
+  return enfileirarBlocos("flavio", `Novo seguidor: ${id}`, 300);
 }
 
 function registrarCurtidas(quantidade) {
@@ -254,17 +303,17 @@ function registrarCurtidas(quantidade) {
   SOCIAL.curtidasPendentes += n;
   const pacotes = Math.floor(SOCIAL.curtidasPendentes / 200);
   SOCIAL.curtidasPendentes %= 200;
-  // Cada pacote de 200 curtidas vale 10 blocos para Lula.
+  // Cada pacote de 200 curtidas vale 100 blocos para Lula.
   for (let i = 0; i < pacotes; i++) {
-    enfileirarBlocos("lula", "200 curtidas", 10);
+    enfileirarBlocos("lula", "200 curtidas", 100);
   }
   return true;
 }
 
 function registrarComentario(comentario) {
   const texto = String(comentario ?? "").trim();
-  if (texto === "13") return enfileirarBlocos("lula", "Comentário 13", 1);
-  if (texto === "22") return enfileirarBlocos("flavio", "Comentário 22", 1);
+  if (texto === "13") return enfileirarBlocos("lula", "Comentário 13", 5);
+  if (texto === "22") return enfileirarBlocos("flavio", "Comentário 22", 5);
   return false;
 }
 
@@ -339,6 +388,7 @@ function conectarLive() {
 window.testeSeguir = (usuario = "teste_usuario") => registrarSeguidor({ uniqueId: usuario });
 window.testeCurtidas = quantidade => registrarCurtidas(quantidade);
 window.testeComentario = texto => registrarComentario(texto);
+window.testeBlocos = (lado, quantidade = 100) => enfileirarBlocos(lado, 'Simulação', quantidade);
 
 if (new URLSearchParams(location.search).get("teste") === "1") {
   document.body.classList.add("modo-teste");
