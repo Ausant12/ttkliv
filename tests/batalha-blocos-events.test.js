@@ -320,13 +320,40 @@ test('API de testes rejeita quantidades inválidas de presentes', () => {
   const source = fs.readFileSync(new URL('../public/games/batalha-blocos/game.js', import.meta.url), 'utf8');
   const eventos = [];
   const context = vm.createContext({
-    fila:{push:evento=>eventos.push(evento)}, processarFila() {},
+    fila:{push:evento=>eventos.push(evento)}, processarFila() {}, mostrarEnvioPresente() {},
     encontrarPresente: () => ({lado:'lula',nome:'Rose',blocos:15})
   });
   vm.runInContext(source.slice(source.indexOf('function receberPresenteTikTok'), source.indexOf('window.receberPresente =')), context);
   for (const quantidade of [0,-1,1.5,1001,Infinity,'erro',null]) assert.equal(context.receberPresenteTikTok(5655,quantidade), false);
   assert.equal(context.receberPresenteTikTok(5655,'3'), true);
   assert.equal(eventos.length, 3);
+});
+
+test('aviso mostra remetente, ícone e quantidade apenas para presentes aceitos', () => {
+  const {context}=jogo();
+  const ids=['aviso-presente','aviso-presente-texto','aviso-presente-quantidade','aviso-presente-icone'];
+  const nodes=Object.fromEntries(ids.map(id=>[id,{hidden:true,textContent:''}]));
+  const timers=[];
+  const cancelados=[];
+  context.document={getElementById:id=>nodes[id]};
+  context.setTimeout=(fn,ms)=>{timers.push({fn,ms});return timers.length;};
+  context.clearTimeout=id=>cancelados.push(id);
+  const rose={giftId:5655,repeatCount:6,rawGiftType:1,repeatEnd:true,eventId:'rose_aviso',user:{nickname:'João',uniqueId:'joao'}};
+  assert.equal(context.registrarPresenteReal({...rose,repeatEnd:false}),false);
+  assert.equal(nodes['aviso-presente'].hidden,true);
+  assert.equal(context.registrarPresenteReal(rose),true);
+  assert.equal(nodes['aviso-presente-texto'].textContent,'João mandou 6 rosas');
+  assert.equal(nodes['aviso-presente-quantidade'].textContent,'×6');
+  assert.ok(nodes['aviso-presente-icone'].src.endsWith('/rose.webp'));
+  assert.equal(context.registrarPresenteReal(rose),false);
+  assert.equal(timers.length,1);
+  context.registrarPresenteReal({giftId:6064,repeatCount:2,rawGiftType:2,eventId:'gg_aviso',user:{nickname:'<b>Ana</b>'}});
+  assert.equal(nodes['aviso-presente-texto'].textContent,'<b>Ana</b> mandou 2 × GG');
+  assert.equal(nodes['aviso-presente'].hidden,false);
+  assert.ok(cancelados.includes(1));
+  assert.equal(timers[1].ms,6000);
+  timers[1].fn();
+  assert.equal(nodes['aviso-presente'].hidden,true);
 });
 
 test('fila preserva blocos pendentes e pode retomar após falha', async () => {

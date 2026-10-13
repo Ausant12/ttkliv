@@ -340,12 +340,13 @@ function receberPresente(lado, presente, valor) {
 
 // Para integrar com o evento de presente do servidor futuramente:
 // window.receberPresenteTikTok(5655) -> Rose do Lula, por exemplo.
-function receberPresenteTikTok(giftId, quantidade = 1) {
+function receberPresenteTikTok(giftId, quantidade = 1, nomeUsuario = 'Teste') {
   const presente = encontrarPresente({ giftId, giftName: giftId });
   if (!presente) return false;
   const total = Number(quantidade);
   if (!Number.isSafeInteger(total) || total < 1 || total > 1000) return false;
   for (let i = 0; i < total; i++) fila.push({ ...presente });
+  mostrarEnvioPresente({ nickname:nomeUsuario }, presente, total);
   void processarFila();
   return true;
 }
@@ -405,6 +406,31 @@ function encontrarPresente(payload) {
   return Object.values(PRESENTES).find(p => [p.nome, ...(p.aliases || [])].some(alias => normalizar(alias) === nome));
 }
 
+let timerAvisoPresente;
+function mostrarEnvioPresente(usuario, presente, quantidade) {
+  if (typeof document === 'undefined') return;
+  const aviso = document.getElementById('aviso-presente');
+  if (!aviso) return;
+  const icones = {
+    'Rose':'rose.webp', 'GG':'gg.webp', 'Tiny Diny':'tiny-diny.webp',
+    'Heart':'heart.webp', 'Heart My Earthling':'heart-my-earthling.webp',
+    'Confetti':'confetti.webp', 'Você é Demais':'voceedemais.webp',
+    'Pistola de Dinheiro':'pistoladinheiro.webp', 'Coroa do Acelerador':'coroa.webp', 'Galáxia':'galaxia.webp'
+  };
+  const nome = String(usuario?.nickname || usuario?.uniqueId || 'Alguém').trim() || 'Alguém';
+  const descricao = presente.nome === 'Rose' ? (quantidade === 1 ? 'rosa' : 'rosas') : `× ${presente.nome}`;
+  const texto = `${nome} mandou ${quantidade} ${descricao}`;
+  document.getElementById('aviso-presente-texto').textContent = texto;
+  document.getElementById('aviso-presente-quantidade').textContent = `×${quantidade}`;
+  const icone = document.getElementById('aviso-presente-icone');
+  icone.src = '../duelo-2d/icones/' + icones[presente.nome];
+  icone.alt = presente.nome;
+  aviso.title = texto;
+  aviso.hidden = false;
+  clearTimeout(timerAvisoPresente);
+  timerAvisoPresente = setTimeout(() => { aviso.hidden = true; }, 6000);
+}
+
 function registrarPresenteReal(payload) {
   const id = Number(payload?.giftId);
   const presente = encontrarPresente(payload);
@@ -433,6 +459,7 @@ function registrarPresenteReal(payload) {
     SOCIAL.presentes.set(key, Date.now());
   }
   for (let i = 0; i < qtd; i++) fila.push({ ...presente });
+  mostrarEnvioPresente(usuario, presente, qtd);
   void processarFila();
   return true;
 }

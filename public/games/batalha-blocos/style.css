@@ -67,6 +67,12 @@ body { display:grid; place-items:center; background:#080808; color:white; font-f
 .meta strong { font-size:15px; }
 .score-box strong { font-size:22px; }
 .centro .score-box { position:absolute; top:32px; left:50%; transform:translateX(-50%); width:max-content; min-width:76px; z-index:15; padding:4px 8px; border-radius:10px; background:#0009; white-space:nowrap; }
+.aviso-presente { position:absolute; top:calc(12% + clamp(26px,6vh,52px) + 12px); left:50%; transform:translateX(-50%); z-index:16; width:150px; display:flex; align-items:center; gap:6px; padding:7px; border:1px solid #ffffff30; border-radius:10px; background:#000b; text-align:left; pointer-events:none; }
+.aviso-presente[hidden] { display:none; }
+.aviso-presente img { width:32px; height:32px; object-fit:contain; flex:none; }
+.aviso-presente > div { min-width:0; }
+.aviso-presente p { font-size:11px; line-height:1.3; overflow-wrap:anywhere; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+.aviso-presente strong { display:block; margin-top:2px; color:var(--amarelo); font-size:14px; }
 .interacao img,.interacao-icone { animation:presente-flutua 3s ease-in-out infinite; }
 .interacao-icone { display:inline-block; animation-delay:-1.5s; }
 .lado-flavio .interacao img,.lado-flavio .interacao-icone { animation-direction:reverse; }
