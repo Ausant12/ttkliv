@@ -7,12 +7,12 @@ const TEMPO_VITORIA = 2600;
 const PRESENTES = Object.freeze({
   5655: { lado: "lula", nome: "Rose", blocos: 15 },
   6560: { lado: "lula", nome: "Tiny Diny", blocos: 50 },
-  544015: { lado: "lula", nome: "Heart My Earthling", blocos: 200 },
+  544015: { lado: "lula", nome: "Heart My Earthling", blocos: 500 },
   6064: { lado: "flavio", nome: "GG", blocos: 15 },
   5327: { lado: "flavio", nome: "Heart", blocos: 50 },
-  5585: { lado: "flavio", nome: "Confetti", blocos: 200 },
-  "Money Gun": { lado: "flavio", nome: "Pistola de Dinheiro", blocos: 1000, aliases: ["Money Gun", "Pistola de Dinheiro"] },
-  "You're Amazing": { lado: "lula", nome: "Você é Demais", blocos: 1000, aliases: ["You're Amazing", "You are Amazing", "Você é Demais"] },
+  5585: { lado: "flavio", nome: "Confetti", blocos: 500 },
+  "Money Gun": { lado: "flavio", nome: "Pistola de Dinheiro", blocos: 2500, aliases: ["Money Gun", "Pistola de Dinheiro"] },
+  "You're Amazing": { lado: "lula", nome: "Você é Demais", blocos: 2500, aliases: ["You're Amazing", "You are Amazing", "Você é Demais"] },
   "Accelerator Crown": { lado: "lula", nome: "Coroa do Acelerador", blocos: 6000, aliases: ["Accelerator Crown", "Coroa do Acelerador"] },
   "Galaxy": { lado: "flavio", nome: "Galáxia", blocos: 6000, aliases: ["Galaxy", "Galáxia"] }
 });
@@ -308,13 +308,14 @@ async function processarFila() {
   try {
     while (fila.length > 0) {
       const evento = fila.shift();
-      const blocos = Math.min(100, evento.blocos);
-      // Alternar os eventos impede um presente grande de prender os demais.
-      if (evento.blocos > blocos) fila.push({ ...evento, blocos: evento.blocos - blocos });
+      // Consumir o presente inteiro, incluindo o saldo após cada vitória.
+      // Intercalar outro vencedor no meio descartaria a torre deste presente.
       try {
-        await animarPresente({ ...evento, blocos });
+        if (evento.quantidade) mostrarEnvioPresente(evento.usuario, evento, evento.quantidade);
+        await animarPresente(evento);
+        ocultarEnvioPresente();
       } catch (erro) {
-        const pendentes = erro.blocosRestantes ?? blocos;
+        const pendentes = erro.blocosRestantes ?? evento.blocos;
         if (pendentes > 0) fila.unshift({ ...evento, blocos: pendentes });
         falhou = true;
         console.error('[BLOCOS] Falha na animação. Ações pendentes preservadas; o próximo evento retoma a fila.', erro);
@@ -333,7 +334,7 @@ function receberPresente(lado, presente, valor) {
     p => p.lado === lado && p.nome.toLowerCase() === String(presente).toLowerCase()
   );
   if (!permitido || Number(valor) !== permitido.blocos) return false;
-  fila.push({ ...permitido });
+  fila.push({ ...permitido, quantidade:1, usuario:{nickname:'Teste'} });
   void processarFila();
   return true;
 }
@@ -345,8 +346,7 @@ function receberPresenteTikTok(giftId, quantidade = 1, nomeUsuario = 'Teste') {
   if (!presente) return false;
   const total = Number(quantidade);
   if (!Number.isSafeInteger(total) || total < 1 || total > 1000) return false;
-  for (let i = 0; i < total; i++) fila.push({ ...presente });
-  mostrarEnvioPresente({ nickname:nomeUsuario }, presente, total);
+  fila.push({ ...presente, blocos:presente.blocos * total, quantidade:total, usuario:{nickname:nomeUsuario} });
   void processarFila();
   return true;
 }
@@ -374,7 +374,7 @@ function registrarSeguidor(usuario) {
   // Um follow da mesma conta conta uma vez por sessão do navegador.
   if (!id || id === '0' || SOCIAL.follows.has(id)) return false;
   SOCIAL.follows.set(id, Date.now());
-  return enfileirarBlocos("flavio", `Novo seguidor: ${id}`, 300);
+  return enfileirarBlocos("flavio", `Novo seguidor: ${id}`, 200);
 }
 
 function registrarCurtidas(quantidade) {
@@ -406,7 +406,6 @@ function encontrarPresente(payload) {
   return Object.values(PRESENTES).find(p => [p.nome, ...(p.aliases || [])].some(alias => normalizar(alias) === nome));
 }
 
-let timerAvisoPresente;
 function mostrarEnvioPresente(usuario, presente, quantidade) {
   if (typeof document === 'undefined') return;
   const aviso = document.getElementById('aviso-presente');
@@ -427,8 +426,12 @@ function mostrarEnvioPresente(usuario, presente, quantidade) {
   icone.alt = presente.nome;
   aviso.title = texto;
   aviso.hidden = false;
-  clearTimeout(timerAvisoPresente);
-  timerAvisoPresente = setTimeout(() => { aviso.hidden = true; }, 6000);
+}
+
+function ocultarEnvioPresente() {
+  if (typeof document === 'undefined') return;
+  const aviso = document.getElementById('aviso-presente');
+  if (aviso) aviso.hidden = true;
 }
 
 function registrarPresenteReal(payload) {
@@ -458,8 +461,7 @@ function registrarPresenteReal(payload) {
     if (SOCIAL.presentes.has(key)) return false;
     SOCIAL.presentes.set(key, Date.now());
   }
-  for (let i = 0; i < qtd; i++) fila.push({ ...presente });
-  mostrarEnvioPresente(usuario, presente, qtd);
+  fila.push({ ...presente, blocos:presente.blocos * qtd, quantidade:qtd, usuario });
   void processarFila();
   return true;
 }

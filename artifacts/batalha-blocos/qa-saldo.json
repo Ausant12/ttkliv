@@ -1,0 +1,134 @@
+{
+  "snapshots": [
+    {
+      "nome": "adversário com 490",
+      "state": {
+        "lula": {
+          "pontos": 490,
+          "vitorias": 0
+        },
+        "flavio": {
+          "pontos": 0,
+          "vitorias": 0
+        }
+      },
+      "pisos": [
+        490,
+        0
+      ],
+      "pendentes": 0,
+      "temporarios": 0
+    },
+    {
+      "nome": "Galáxia completa e próximo presente",
+      "state": {
+        "lula": {
+          "pontos": 15,
+          "vitorias": 0
+        },
+        "flavio": {
+          "pontos": 0,
+          "vitorias": 12
+        }
+      },
+      "pisos": [
+        15,
+        0
+      ],
+      "pendentes": 0,
+      "temporarios": 0
+    },
+    {
+      "nome": "mil blocos completos",
+      "state": {
+        "lula": {
+          "pontos": 0,
+          "vitorias": 0
+        },
+        "flavio": {
+          "pontos": 0,
+          "vitorias": 14
+        }
+      },
+      "pisos": [
+        0,
+        0
+      ],
+      "pendentes": 0,
+      "temporarios": 0
+    }
+  ],
+  "torres": [
+    {
+      "lado": "flavio",
+      "pontos": 500,
+      "pisos": 500
+    },
+    {
+      "lado": "flavio",
+      "pontos": 500,
+      "pisos": 500
+    },
+    {
+      "lado": "flavio",
+      "pontos": 500,
+      "pisos": 500
+    },
+    {
+      "lado": "flavio",
+      "pontos": 500,
+      "pisos": 500
+    },
+    {
+      "lado": "flavio",
+      "pontos": 500,
+      "pisos": 500
+    },
+    {
+      "lado": "flavio",
+      "pontos": 500,
+      "pisos": 500
+    },
+    {
+      "lado": "flavio",
+      "pontos": 500,
+      "pisos": 500
+    },
+    {
+      "lado": "flavio",
+      "pontos": 500,
+      "pisos": 500
+    },
+    {
+      "lado": "flavio",
+      "pontos": 500,
+      "pisos": 500
+    },
+    {
+      "lado": "flavio",
+      "pontos": 500,
+      "pisos": 500
+    },
+    {
+      "lado": "flavio",
+      "pontos": 500,
+      "pisos": 500
+    },
+    {
+      "lado": "flavio",
+      "pontos": 500,
+      "pisos": 500
+    },
+    {
+      "lado": "flavio",
+      "pontos": 500,
+      "pisos": 500
+    },
+    {
+      "lado": "flavio",
+      "pontos": 500,
+      "pisos": 500
+    }
+  ],
+  "erros": []
+}

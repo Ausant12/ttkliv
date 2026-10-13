@@ -2,7 +2,7 @@
 
 ## Resultado
 
-24 testes da batalha passaram. A suíte dos três jogos passou em 33 testes.
+27 testes da batalha passaram. A suíte dos três jogos passou em 36 testes.
 Seis cenários completos passaram em cada um dos dois perfis do Electron:
 perfil padrão e perfil sem aceleração GPU, como no launcher do projeto.
 Não houve erros de console ou arquivos ausentes nos cenários concluídos.
@@ -20,13 +20,21 @@ Não houve erros de console ou arquivos ausentes nos cenários concluídos.
 
 ## Eventos e funcionamento
 
-Os testes cobrem todos os dez presentes, quantidades e aliases; sequência em andamento e final duplicado; seguidores únicos; pacotes e saldo de curtidas; comentários 13 e 22; ações inválidas; meta de 500; excedentes de presentes de 6.000; alternância da fila; retomada após falha; canais de áudio; contagem real de pisos e câmera.
+Os testes cobrem todos os dez presentes, quantidades e aliases; sequência em andamento e final duplicado; seguidores únicos; pacotes e saldo de curtidas; comentários 13 e 22; ações inválidas; meta de 500; excedentes de presentes de 6.000; consumo integral de cada presente; retomada após falha; canais de áudio; contagem real de pisos e câmera.
+
+## Saldo de presentes após vitórias
+
+Cada presente agora é consumido inteiro antes do próximo evento. A alternância anterior em trechos de 100 permitia que uma vitória do adversário zerasse uma torre parcialmente construída pelo presente em andamento. Isso podia reduzir as vitórias de um presente grande.
+
+Os testes de regressão verificam uma Galáxia de 6.000 gerando 12 vitórias e um presente de 1.000 gerando duas, inclusive quando o adversário começa com 490 pontos e envia outro evento. Os eventos novos aguardam na fila até todo o saldo do presente atual ser usado.
+
+Para testar essas rodadas no jogo completo, execute o teste do Electron com `--software --saldo`. O resultado é salvo em `qa-saldo.json`.
 
 O teste de rajada mistura 1.000 ações válidas com 250 notificações de presente duplicadas: todos os blocos aceitos são depositados e as duplicações não pontuam.
 
 Os cenários completos usam um servidor Express/Socket.IO local e o código completo do jogo. Incluem 40 comentários, ações durante a vitória, duas vitórias de um presente premium, redimensionamento durante quedas, carregamento dos assets, limpeza de efeitos temporários e vídeo sem áudio em loop. Os pontos coincidem com a quantidade de pisos após cada cenário.
 
-## Velocidade medida
+## Velocidade medida antes da correção de prioridade dos presentes
 
 Teste com seis presentes recebidos em rajada: 530 blocos, sem vitória no intervalo medido.
 
