@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Jogo da Urna • Lula × Flávio</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <div class="capture-frame" id="capture-frame">
+    <section class="overlay" aria-label="Jogo da Urna">
+      <header><span class="live">● INTERAÇÃO DA LIVE</span><h1>JOGO DA URNA</h1><p>Envie um presente. Coloque seu time na frente!</p></header>
+      <div class="round-bar"><span id="round-label">RODADA 1</span><strong id="clock">03:00</strong><span id="round-phase">AGUARDANDO VOTOS</span></div>
+      <div class="win-bar"><span>🏆 Lula <b id="wins-lula">0</b></span><span>Flávio <b id="wins-flavio">0</b> 🏆</span></div>
+      <div class="scoreboard">
+        <div class="lula"><span>LULA</span><strong id="score-lula">0</strong><small>VOTOS</small></div>
+        <span class="versus">×</span>
+        <div class="flavio"><span>FLÁVIO</span><strong id="score-flavio">0</strong><small>VOTOS</small></div>
+      </div>
+      <div class="meter"><div id="meter-lula"></div></div>
+      <p id="leader">Quem vai abrir a votação?</p>
+      <div class="gift-carousel" role="region" aria-label="Presentes: envie para dar votos ao seu candidato"><div class="gift-track" id="gift-track"></div></div>
+      <canvas id="arena" width="540" height="480" aria-label="Personagens caminham até as urnas e votam"></canvas>
+      <div class="gift-carousel social-carousel" role="region" aria-label="Como participar: seguir, curtir e comentar"><div class="gift-track" id="social-track"></div></div>
+      <canvas id="crowd-arena" width="540" height="90" aria-label="Torcida comemorando abaixo das opções de interação"></canvas>
+      <div id="activity" role="status">As urnas estão abertas!</div>
+      <footer><span id="connection">Modo de teste • sem live conectada</span><small>Votação lúdica da live • sem vínculo com eleição oficial</small></footer>
+      <div id="victory" class="victory" hidden role="status" aria-live="polite">
+        <div class="victory-confetti" id="victory-confetti" aria-hidden="true"></div>
+        <div class="victory-content">
+          <span class="victory-tag">VENCEDOR DA RODADA</span>
+          <h2 id="victory-title"></h2>
+          <img id="victory-urn" alt="">
+          <p id="victory-result"></p>
+          <span class="victory-next">A próxima rodada já vai começar!</span>
+        </div>
+      </div>
+    </section>
+    </div>
+    <aside id="controls"><h2>Controle da live</h2><label for="duration">Duração das próximas rodadas</label><select id="duration"><option value="30">30 segundos (teste)</option><option value="60">1 minuto</option><option value="180" selected>3 minutos</option><option value="300">5 minutos</option></select><p>A rodada começa no primeiro presente. Ao acabar o tempo, os eleitores já na fila terminam de votar. Novos presentes ficam para a próxima rodada.</p><h2>Teste os personagens</h2><div id="test-buttons"></div><button id="reset">Zerar votação e vitórias</button><a id="overlay-link" href="?overlay=1">Abrir somente o overlay</a></aside>
+  </main>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/lib/tiktok-bridge.js"></script>
+  <script type="module" src="game.js"></script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+*{box-sizing:border-box}body{margin:0;background:#080d17;color:#f4f6fa;font-family:Arial,sans-serif}main{display:flex;justify-content:center;align-items:flex-start;gap:28px;padding:24px}.overlay{width:540px;flex-shrink:0;background:radial-gradient(ellipse at 10% 45%,#3b1525 0,transparent 48%),radial-gradient(ellipse at 90% 45%,#133c30 0,transparent 48%),#101725;overflow:hidden;border:1px solid #ffffff15;border-radius:22px}header{text-align:center;padding:27px 16px 16px}.live{font-size:10px;letter-spacing:3px;color:#aebbd1}h1{font-size:40px;letter-spacing:-1px;margin:10px 0}header p{font-size:13px;color:#aebbd1;margin:0}.scoreboard{display:flex;justify-content:space-around;align-items:center;padding:15px 25px}.scoreboard>div{text-align:center;width:42%}.scoreboard span{font-weight:900;letter-spacing:3px;font-size:19px}.scoreboard strong{display:block;font-size:57px;line-height:1.2;font-variant-numeric:tabular-nums}.scoreboard small{font-size:10px;letter-spacing:4px;color:#9ca9be}.lula>span,.red{color:#ff6377}.flavio>span,.green{color:#7ceb97}.versus{color:#778298}.meter{height:6px;background:#48c877;margin:0 30px;border-radius:8px;overflow:hidden}.meter>div{width:50%;height:100%;background:#f24d68;transition:width .4s}#leader{text-align:center;color:#aebbd1;font-size:12px;margin:12px 0 0}canvas{display:block;width:100%;height:auto}#activity{margin:0 22px 16px;text-align:center;background:#ffffff07;border:1px solid #ffffff0b;border-radius:10px;min-height:36px;padding:10px;font-size:12px;color:#e7d8a9}.gifts{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:0 24px 20px}.gifts b{display:block;font-size:12px;letter-spacing:2px;margin-bottom:12px}.gifts span{display:flex;justify-content:space-between;gap:4px;font-size:11px;padding:8px 0;border-bottom:1px solid #ffffff0b}.gifts em{font-style:normal;color:#d9bd73;white-space:nowrap}footer{text-align:center;padding:0 10px 20px;color:#93a4ba;font-size:10px}footer small{display:block;margin-top:9px;font-size:9px;color:#718198}aside{width:260px;padding:20px;background:#141e2e;border-radius:16px}h2{font-size:18px;margin-top:0}aside p{font-size:13px;line-height:1.5;color:#acb9cd}button,a{font:inherit}button{cursor:pointer;border:1px solid #ffffff25;background:#23334b;color:white;border-radius:8px;padding:10px;margin:4px 0;width:100%}button:hover{background:#334967}a{display:block;color:#9dcaff;font-size:13px;margin-top:15px}body.clean main{padding:0}body.clean .overlay{border:0;border-radius:0}body.clean aside{display:none}@media(max-width:850px){main{flex-direction:column;align-items:center;padding:10px}.overlay{width:min(540px,100%)}aside{width:min(540px,100%)}} 
+/* Live presentation and round controls. */
+.round-bar{display:flex;align-items:center;justify-content:space-between;margin:0 24px;padding:10px 14px;background:#ffffff08;border:1px solid #ffffff12;border-radius:12px;font-size:9px;letter-spacing:1px;color:#aabbd0;gap:8px}.round-bar strong{font-size:26px;letter-spacing:2px;color:#f5d785;font-variant-numeric:tabular-nums}.win-bar{display:flex;justify-content:space-between;padding:12px 38px 0;font-size:12px;color:#a8b8cb}.win-bar b{color:#ffe5a0;padding:0 5px}.scoreboard strong{font-size:64px;text-shadow:0 3px 24px #ffffff15}.scoreboard>div{background:#ffffff03;border:1px solid #ffffff08;border-radius:14px;padding:10px 4px}.gifts{gap:14px;padding-bottom:12px}.gifts b{margin-bottom:5px}.gifts span{padding:6px 0;font-size:10px}header{padding-top:20px;padding-bottom:14px}h1{font-size:38px;margin:8px 0}select{display:block;width:100%;padding:10px;margin-top:8px;margin-bottom:12px;background:#23334b;color:#fff;border:1px solid #ffffff25;border-radius:8px}aside label{font-size:12px;color:#bac7da}.urgent{color:#ff647c!important;animation:clock-pulse .6s infinite alternate}@keyframes clock-pulse{to{opacity:.55;transform:scale(1.08)}}@media(prefers-reduced-motion:reduce){.urgent{animation:none}}
+
+/* Fixed 540 × 960 scene; resize the complete scene without changing its ratio. */
+main{flex-direction:row;align-items:flex-start;justify-content:center;flex-wrap:nowrap;padding:24px;gap:24px;min-width:max-content}
+.capture-frame{position:relative;width:min(540px,calc((100dvh - 48px)*9/16));min-width:270px;aspect-ratio:9/16;flex:none;overflow:hidden;background:#101725;box-shadow:0 16px 65px #0006}
+.capture-frame .overlay{position:absolute;inset:0 auto auto 0;width:540px;height:960px;transform-origin:top left;border:0;border-radius:0;display:grid;grid-template-rows:96px 48px 28px 120px 6px 28px minmax(0,1fr) 40px 102px 42px;overflow:hidden}
+.overlay header{padding:12px 16px 8px}.overlay h1{font-size:34px;margin:6px 0}.overlay header p{font-size:12px}.overlay .round-bar{padding:6px 14px}.overlay .win-bar{padding:8px 38px 0}.overlay .scoreboard{padding:6px 25px 10px}.overlay .scoreboard>div{padding:5px 4px}.overlay .scoreboard strong{font-size:56px}.overlay #leader{margin:0;align-self:center}.overlay canvas{width:100%;height:100%;min-height:0;object-fit:contain}.overlay #activity{margin:0 22px 6px;padding:9px;min-height:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.overlay .gifts{padding:0 24px 8px;overflow:hidden}.overlay footer{padding:4px 10px 8px}.overlay footer small{margin-top:6px}
+aside#controls{width:280px;flex:none;max-height:calc(100dvh - 48px);overflow-y:auto;position:sticky;top:24px;border:1px solid #ffffff12}
+body.clean{background:#101725;overflow:hidden}body.clean main{padding:0;margin:0;gap:0;min-width:0;width:100%;display:block}body.clean .capture-frame{width:100vw;min-width:0;box-shadow:none}body.clean aside{display:none}
+
+/* Seamless gift carousel below the voting result. */
+.capture-frame .overlay{grid-template-rows:96px 48px 28px 120px 6px 28px 96px minmax(0,1fr) 40px 42px}
+.gift-carousel{min-width:0;overflow:hidden;margin:5px 0 7px;align-self:stretch;mask-image:linear-gradient(to right,transparent,#000 4%,#000 96%,transparent)}
+.gift-track{display:flex;width:max-content;height:100%;animation:gift-scroll 30s linear infinite;will-change:transform}
+.gift-group{display:flex;gap:10px;padding-right:10px;flex:none;height:100%}
+.gift-card{width:190px;flex:none;display:flex;align-items:center;gap:10px;padding:10px 12px;background:linear-gradient(135deg,#ffffff09,#ffffff03);border:1px solid #ffffff12;border-radius:13px;box-shadow:inset 3px 0 var(--gift-color)}
+.gift-lula{--gift-color:#ff6377}.gift-flavio{--gift-color:#7ceb97}
+.gift-card img{width:46px;height:46px;object-fit:contain;flex:none;filter:drop-shadow(0 3px 6px #0005)}
+.gift-card>div{min-width:0;display:flex;flex-direction:column;gap:4px}
+.gift-card b{font-size:10px;letter-spacing:1.5px;color:var(--gift-color)}
+.gift-card span{font-size:11px;color:#c5d1e3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gift-card strong{font-size:15px;color:#ffe09b}
+.gift-carousel:hover .gift-track{animation-play-state:paused}
+@keyframes gift-scroll{to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){.gift-track{animation:none}.gift-carousel{overflow-x:auto;mask-image:none}.gift-group[aria-hidden]{display:none}}
+
+/* Winner presentation stays inside the captured 9:16 scene. */
+.victory[hidden]{display:none}
+.victory{position:absolute;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;overflow:hidden;background:radial-gradient(ellipse at center,#172337e8,#080d17fa 75%)}
+.victory-content{position:relative;z-index:1;text-align:center;width:100%;padding:30px 18px;animation:victory-arrive .65s ease-out}
+.victory-tag{display:inline-block;color:#ffe09b;font-size:13px;letter-spacing:4px;border:1px solid #ffe09b50;padding:12px 18px;border-radius:30px}
+.victory h2{font-size:48px;line-height:1.1;margin:28px 0 18px;font-weight:900;color:var(--winner-color);text-shadow:0 0 35px var(--winner-color);text-wrap:balance}
+.victory img{display:block;width:100%;height:335px;object-fit:contain;filter:drop-shadow(0 0 25px var(--winner-color));animation:victory-float 2.5s ease-in-out infinite alternate}
+.victory p{font-size:22px;color:#fff0bf;margin:24px 0 18px;font-weight:bold}
+.victory-next{color:#aabbd0;font-size:13px;letter-spacing:1px}
+.victory-confetti{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.victory-confetti i{position:absolute;top:-30px;width:8px;height:15px;animation:victory-confetti 4s linear infinite}
+@keyframes victory-arrive{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+@keyframes victory-float{to{transform:translateY(-10px)}}
+@keyframes victory-confetti{from{transform:translateY(-30px) rotate(0deg)}to{transform:translateY(1030px) rotate(700deg)}}
+@media(prefers-reduced-motion:reduce){.victory-content,.victory img,.victory-confetti i{animation:none}.victory-confetti{display:none}}
+
+/* Messages remain in the controls; the arena uses the freed capture space. */
+.capture-frame .overlay{grid-template-rows:96px 48px 28px 120px 6px 28px 96px minmax(0,1fr)}
+aside #activity{margin:16px 0 10px;white-space:normal;line-height:1.5}
+aside #connection{display:block;font-size:11px;color:#93a4ba;line-height:1.5}
+
+/* Clear lower space for the live chat, with the action in the upper section. */
+.capture-frame .overlay{grid-template-rows:76px 42px 24px 108px 4px 24px 78px 420px 1fr;background:radial-gradient(ellipse at 15% 38%,#3a182636,transparent 48%),radial-gradient(ellipse at 85% 38%,#14442b36,transparent 48%),#101725}
+.overlay header{padding:12px 16px 6px}.overlay header .live,.overlay header p{display:none}.overlay h1{font-size:31px;margin:8px 0}.overlay .round-bar{border:0;background:#ffffff04;border-radius:8px;margin:0 24px}.overlay .round-bar strong{font-size:24px}.overlay .scoreboard>div{border:0;background:transparent;padding:2px 4px}.overlay .scoreboard strong{font-size:54px;text-shadow:none}.overlay .win-bar{font-size:11px}.overlay .gift-carousel{margin-top:4px;margin-bottom:6px}.gift-card{border-color:#ffffff09;background:#ffffff03;box-shadow:inset 2px 0 var(--gift-color);border-radius:9px;padding:8px 10px}.gift-card img{width:40px;height:40px}.overlay #leader{font-size:11px;color:#9faec2}
+
+/* More visible victory counters without changing the voting scoreboard. */
+.capture-frame .overlay{grid-template-rows:76px 42px 42px 108px 4px 24px 78px 402px 1fr}
+.overlay .win-bar{padding:5px 34px 0;font-size:17px;align-items:center;font-weight:700}
+.overlay .win-bar b{font-size:26px;color:#ffe09b;padding:0 7px;font-variant-numeric:tabular-nums}
+
+/* Modest interface enlargement; capture remains 540 × 960. */
+.overlay h1{font-size:35px}.overlay .round-bar strong{font-size:27px}.overlay .scoreboard strong{font-size:62px}.overlay .scoreboard span{font-size:21px}.overlay .scoreboard small{font-size:11px}.overlay .gift-card img{width:46px;height:46px}.overlay .gift-card strong{font-size:17px}
+
+/* Participation tips below the arena; gifts remain in the top carousel. */
+.capture-frame .overlay{grid-template-rows:76px 42px 42px 108px 4px 24px 78px 402px 96px 1fr}
+.overlay .social-carousel{margin:8px 0;grid-row:9}
+.social-carousel .gift-card{width:270px;padding:10px 14px}
+.social-carousel .gift-card strong{font-size:16px}
+.social-carousel .gift-card b{font-size:11px}
+.social-carousel .gift-track{animation-duration:28s}
+
+/* Interaction carousel replaces the former crowd area; crowd sits below it. */
+.overlay .social-carousel{position:absolute;top:660px;left:0;width:100%;height:92px;margin:0;z-index:2}
+.social-carousel .gift-track{animation-duration:21s}
+.overlay #crowd-arena{position:absolute;top:764px;left:0;width:540px;height:90px;object-fit:contain;pointer-events:none}
+
+/* Absolute positioning must use the full overlay, not the former ninth grid row. */
+.overlay .social-carousel{grid-area:auto;position:absolute;inset:660px 0 auto;height:92px;width:100%;margin:0;z-index:2}
+.overlay #crowd-arena{grid-area:auto;position:absolute;inset:764px 0 auto;width:540px;height:90px}
+
+/* Room for complete walking paths before the lower carousel and crowd. */
+.capture-frame .overlay{grid-template-rows:76px 42px 42px 108px 4px 24px 78px 426px 1fr}
+.overlay .social-carousel{inset:800px 0 auto;height:82px}
+.overlay #crowd-arena{inset:886px 0 auto;height:74px}
+
+/* Supporter spotlight, isolated from the carousel and voting paths. */
+.participant[hidden],.participant img[hidden],.participant-initial[hidden]{display:none}
+.participant{position:absolute;grid-area:auto;inset:714px 24px auto;height:74px;z-index:3;display:flex;align-items:center;gap:12px;padding:10px 14px;background:#111d2ef5;border:1px solid #ffffff14;border-left:3px solid var(--participant-color);border-radius:12px;box-shadow:0 6px 24px #0003}
+.participant img,.participant-initial{width:48px;height:48px;flex:none;border-radius:50%;object-fit:cover;border:2px solid var(--participant-color)}
+.participant-initial{display:flex;align-items:center;justify-content:center;font-size:23px;color:#fff;background:#29354a}
+.participant>div{font-size:15px;line-height:1.4;font-weight:bold;overflow-wrap:anywhere;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+.overlay .round-bar{position:relative;overflow:hidden}.round-bar.final-seconds{background:#ffcf6810;border:1px solid #ffcf6840}
+.round-bar.final-seconds::after{content:'';position:absolute;bottom:0;left:0;height:3px;width:var(--countdown);background:#ffe09b;transition:width .5s linear}
+.round-bar.final-seconds #round-phase{color:#ffe09b;font-weight:bold;font-size:10px}
+
+.session-notice[hidden]{display:none}.session-notice{position:absolute;grid-area:auto;inset:0;z-index:30;background:#101725f5;display:flex;align-items:center;justify-content:center;padding:42px;text-align:center;font-size:22px;line-height:1.6;color:#ffe09b}

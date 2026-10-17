@@ -20,6 +20,7 @@ function criarJanela() {
         resizable: true,
         autoHideMenuBar: true,
         backgroundColor: "#000000",
+        title: "Jogo da Urna • Live",
 
         webPreferences: {
             nodeIntegration: false,
@@ -31,15 +32,14 @@ function criarJanela() {
     // Remove o menu superior do Electron
     janela.setMenu(null);
 
-    // Abre o nosso jogo (permite passar URL via argumento se desejado, ex: npx electron electron.cjs http://localhost:3000/games/duelo-2d-kim-nik/)
+    // Abre o Jogo da Urna; uma URL opcional pode ser passada pelo terminal.
     const targetUrl = process.argv[2] && process.argv[2].startsWith("http")
         ? process.argv[2]
-        : "http://localhost:3000/games/batalha-blocos/?username=anny.fofinha4";
+        : "http://localhost:3000/games/jogo-da-urna/?username=makiozinha9";
 
     janela.loadURL(targetUrl);
 
-    // Abre o console de desenvolvimento dentro da janela ao iniciar.
-    janela.webContents.openDevTools({ mode: "right" });
+    // O console pode ser aberto com F12 quando necessário.
 
     // F5 e Ctrl + R recarregam o jogo
     janela.webContents.on(

@@ -13,6 +13,20 @@
  */
 export function normalizeUser(raw) {
   const usuario = raw.user ?? raw;
+  const picture=value=>{
+    if(typeof value==='string')return /^https?:\/\//i.test(value.trim())?value.trim():'';
+    if(Array.isArray(value))return value.map(picture).find(Boolean)||'';
+    if(value&&typeof value==='object')return picture(value.urlList??value.url_list??value.urls??value.url);
+    return '';
+  };
+  const profilePictureUrl=[
+    usuario.profilePictureUrl,raw.profilePictureUrl,
+    usuario.avatarThumb,usuario.avatarMedium,usuario.avatarLarge,
+    usuario.avatar_thumb,usuario.avatar_medium,usuario.avatar_large,
+    raw.avatarThumb,raw.avatarMedium,raw.avatarLarge,
+    raw.avatar_thumb,raw.avatar_medium,raw.avatar_large,
+    usuario.userDetails?.profilePictureUrls,raw.userDetails?.profilePictureUrls
+  ].map(picture).find(Boolean)||'';
 
   return {
     uniqueId:
@@ -29,10 +43,7 @@ export function normalizeUser(raw) {
       usuario.uniqueId ||
       "Anonymous",
 
-    profilePictureUrl:
-      usuario.profilePictureUrl ||
-      raw.profilePictureUrl ||
-      ""
+    profilePictureUrl
   };
 }
 /**
@@ -55,6 +66,7 @@ export function normalizeChat(raw) {
   return {
     user: normalizeUser(raw),
     comment: String(comentario).trim(),
+    eventId: raw.eventId != null ? String(raw.eventId) : raw.msgId != null ? String(raw.msgId) : raw.common?.msgId != null ? String(raw.common.msgId) : null,
     timestamp: Date.now()
   };
 }
@@ -70,6 +82,7 @@ export function normalizeLike(raw) {
 	return {
 		user: normalizeUser(raw),
 		likeCount: Number(likeCount) || 1,
+		eventId: raw.eventId != null ? String(raw.eventId) : raw.msgId != null ? String(raw.msgId) : raw.common?.msgId != null ? String(raw.common.msgId) : null,
 		totalLikeCount: Number(raw.totalLikeCount || raw.total_like_count || 0),
 		timestamp: Date.now(),
 	};
