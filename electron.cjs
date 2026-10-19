@@ -35,7 +35,7 @@ function criarJanela() {
     // Abre o Jogo da Urna; uma URL opcional pode ser passada pelo terminal.
     const targetUrl = process.argv[2] && process.argv[2].startsWith("http")
         ? process.argv[2]
-        : "http://localhost:3000/games/jogo-da-urna/?username=makiozinha9";
+        : "http://localhost:3000/games/batalha-blocos/?username=makiozinha9";
 
     janela.loadURL(targetUrl);
 
